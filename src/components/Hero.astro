@@ -79,7 +79,7 @@ const twinkles = [
 
   <div class="hero" data-rise>
     <p class="eyebrow hero__eyebrow">{copy.hero.eyebrow}</p>
-    <h1 class="display hero__name">{copy.hero.name}</h1>
+    <h1 class="display hero__name" tabindex="-1">{copy.hero.name}</h1>
     <p class="hero__date"><DateLine date={date} /></p>
     <a class="btn btn--light hero__cta" href="#confirmar">{copy.hero.rsvpButton}</a>
     <p class="hero__hint">
@@ -106,6 +106,27 @@ const twinkles = [
     display: block;
     filter: drop-shadow(0 0 6px rgb(255 236 180 / 0.9));
     pointer-events: none;
+  }
+
+  /* V3 twinkle (CSS only, so it needs no script and honors reduced motion). */
+  @media (prefers-reduced-motion: no-preference) {
+    .twinkle {
+      animation: twinkle 3.2s ease-in-out infinite;
+      animation-delay: var(--twinkle-delay, 0s);
+    }
+  }
+
+  @keyframes twinkle {
+    0%,
+    100% {
+      opacity: 0.25;
+      transform: scale(0.75);
+    }
+
+    50% {
+      opacity: 1;
+      transform: scale(1.1);
+    }
   }
 
   .hero {

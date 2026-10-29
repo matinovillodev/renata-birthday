@@ -5,6 +5,7 @@
  * shared by link, so it carries Open Graph and Twitter card previews.
  */
 import { Font } from 'astro:assets';
+import { bootstrapScript } from '../scripts/bootstrap';
 import '../styles/tokens.css';
 import '../styles/global.css';
 
@@ -24,6 +25,8 @@ const pageUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Before first paint: html.js, and html.intro unless this is a deep link (src/scripts/bootstrap.ts). -->
+    <script is:inline set:html={bootstrapScript} />
     <meta name="robots" content="noindex" />
     <title>{title}</title>
     <meta name="description" content={description} />

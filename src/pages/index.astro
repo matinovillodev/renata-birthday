@@ -94,9 +94,13 @@ const ogImageUrl = new URL(ogImage.src, Astro.site ?? Astro.url).href;
     </div>
   </main>
 
-  <!-- T3 mounts the fairy-dust particles here (tap anywhere). -->
+  <!-- Fairy-dust particles (tap anywhere) are drawn here by src/scripts/fairy-dust. -->
   <div class="fairy-dust" data-fairy-dust aria-hidden="true"></div>
 </Base>
+
+<script>
+  import '../scripts/main';
+</script>
 
 <style>
   .invitation {
@@ -121,5 +125,15 @@ const ogImageUrl = new URL(ogImage.src, Astro.site ?? Astro.url).href;
     inset: 0;
     z-index: 30;
     pointer-events: none;
+  }
+
+  /* The intro burst plays above the curtain (z-index 40) while it opens. */
+  :global(html.intro-opening) .fairy-dust {
+    z-index: 45;
+  }
+
+  .fairy-dust :global(canvas) {
+    display: block;
+    pointer-events: none !important;
   }
 </style>

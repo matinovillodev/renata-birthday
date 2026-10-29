@@ -50,6 +50,23 @@ a:hover {
   box-shadow: 0 0 0 3px var(--focus-inner);
 }
 
+/* Programmatic focus targets (hero heading, anchored sections) need no ring. */
+[tabindex='-1']:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Intro curtain up: the page behind it does not scroll. */
+html.intro,
+html.intro body {
+  overflow: hidden;
+}
+
+/* Lenis animates the scroll itself; native smooth scrolling would fight it. */
+html.lenis {
+  scroll-behavior: auto;
+}
+
 /* Fraunces display text: softened as in V3, optical size left on auto. */
 .display {
   font-family: var(--font-display);

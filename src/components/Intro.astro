@@ -3,9 +3,9 @@
  * Opening curtain ("Abrir invitación") that covers the hero.
  *
  * Progressive enhancement: it is NOT rendered visibly by default, so without
- * JavaScript the invitation is fully visible and scrollable. T3 shows it by
- * adding the `js` class to <html> (only once its script can open it), wires
- * `[data-intro-open]`, fills `[data-intro-burst]` and removes the curtain.
+ * JavaScript the invitation is fully visible and scrollable. The inline
+ * bootstrap adds `intro` to <html> (plain visits only); src/scripts/intro.ts
+ * wires `[data-intro-open]`, bursts from `[data-intro-burst]` and removes it.
  */
 import { copy } from '../data/event';
 import StarIcon from './StarIcon.astro';
@@ -40,7 +40,7 @@ import StarIcon from './StarIcon.astro';
     display: none;
   }
 
-  :global(html.js) .intro {
+  :global(html.intro) .intro {
     position: absolute;
     top: 0;
     left: 0;

@@ -52,8 +52,8 @@ import StarIcon from './StarIcon.astro';
   }
 
   /*
-   * The hint promises fairy dust on tap, which only exists once T3's script
-   * runs (html.js) and motion is allowed; otherwise it stays hidden.
+   * The hint promises fairy dust on tap, which only exists once the motion
+   * script runs (data-motion="ready") and motion is allowed.
    */
   .invitation__hint {
     display: none;
@@ -64,13 +64,9 @@ import StarIcon from './StarIcon.astro';
     color: var(--color-ink-muted);
   }
 
-  :global(html.js) .invitation__hint {
-    display: inline-flex;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    :global(html.js) .invitation__hint {
-      display: none;
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html[data-motion='ready']) .invitation__hint {
+      display: inline-flex;
     }
   }
 </style>
