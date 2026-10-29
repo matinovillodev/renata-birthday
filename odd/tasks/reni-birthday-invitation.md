@@ -28,13 +28,13 @@ The family needs a warm, personal invitation page that loads fast on phones (ori
 - Event data (do not invent): Renata · Sábado 28 de noviembre de 2026, 13:30 hs · Centro Vecinal Jorge Newbery · Maps https://maps.app.goo.gl/1j1g7EUKBxd6Cs3Q8 (resolves to -31.3519557, -64.1809048) · WhatsApp +54 9 3517 62-2809 · no RSVP deadline. Missing data becomes a clearly marked `[PLACEHOLDER]`.
 - How to get there: embedded Google Maps `<iframe>` (user decision, replaces the requirement's Maps button), `loading="lazy"`, descriptive `title`. Embed source: official "Share → Embed a map" `src` if the user provides it; otherwise `https://maps.google.com/maps?q=-31.3519557,-64.1809048&z=16&hl=es&output=embed`.
 - RSVP: one WhatsApp button (`wa.me`) with a predefined message containing blanks for name and number of attendees. The page never claims the RSVP was sent.
-- No dedication or signature (general-public invitation). No autoplay audio. Visible copy in neutral Spanish (no voseo/tú imperatives).
+- No dedication or signature (general-public invitation). No autoplay audio. Visible copy follows the user-approved V3 verbatim (centralized in `src/data/event.ts`); V3 includes two voseo imperatives ("Deslizá para entrar al bosque", "Confirmá tu asistencia"), kept as the user's own copy and flagged for confirmation.
 - Full-bleed photos; text never covers Renata's face; no boxed containers for the main feel. `noindex`; Open Graph preview (photo, name, date).
 - Photos: EXIF-stripped masters in `src/assets/photos`; originals in `/images` stay on disk and are git-ignored.
 
 ## Tasks
 
-- [ ] T1 Scaffold Astro project (review and reuse the partial scaffold left by the paused run), centralized event data + copy taken from V3, link/date helpers with Vitest (test-first), EXIF-stripped photo masters. Route: delegated (writer trigger: 2+ non-trivial files).
+- [x] T1 Scaffold Astro project (review and reuse the partial scaffold left by the paused run), centralized event data + copy taken from V3, link/date helpers with Vitest (test-first), EXIF-stripped photo masters. Route: delegated (writer trigger: 2+ non-trivial files). Evidence: RED observed (missing modules, then 9 failing assertions on stubs) → GREEN 14/14; `npm test` 14/14 (parent spot check re-run: 14/14); `npx astro check` 0 errors; `npm run build` exit 0. Astro 7.4.4, Vitest 5.0.5, TypeScript 6.0.3 (`@astrojs/check` 0.9.12 does not accept TS 7). Photo masters 2400 px, ~300–375 KB, EXIF and ICC removed after converting Adobe RGB (1998) → sRGB.
 - [ ] T2 Static page implementing V3 layout: sections, tokens, self-hosted fonts, art-directed responsive images, Google Maps iframe, SEO/OG/noindex. Route: delegated.
 - [ ] T3 Motion per V3: GSAP entrance animations + parallax (ScrollTrigger), Lenis, tsParticles fairy dust (lazy), reduced-motion fallbacks. Route: delegated.
 - [ ] T4 Playwright e2e on mobile and desktop viewports (links, anchors, no fake confirmation, reduced motion), axe accessibility, page-weight budget. Route: delegated.

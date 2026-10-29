@@ -1,0 +1,26 @@
+---
+// Temporary placeholder that proves the data module renders end to end.
+// The V3 "Inmersiva con parallax" layout replaces this markup in T2.
+import { copy, event } from '../data/event';
+import { formatEventDate } from '../lib/event-date';
+
+const { dayLabel, timeLabel } = formatEventDate(event.startsAt, event.timeZone);
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>{copy.documentTitle}</title>
+  </head>
+  <body>
+    <main>
+      <p>{copy.hero.eyebrow}</p>
+      <h1>{event.childName}</h1>
+      <p>{dayLabel}{copy.dateTimeSeparator}{timeLabel}</p>
+      <p>{event.venue.name}</p>
+    </main>
+  </body>
+</html>

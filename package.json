@@ -1,0 +1,25 @@
+{
+  "name": "reni-birthday",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Digital invitation for Renata's first birthday.",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "astro": "7.4.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.12",
+    "typescript": "6.0.3",
+    "vitest": "5.0.5"
+  }
+}
