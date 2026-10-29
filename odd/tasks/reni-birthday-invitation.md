@@ -67,6 +67,8 @@ The family needs a warm, personal invitation page that loads fast on phones (ori
 - Git initialized; identity set repo-locally (Matias Novillo <novillomatiasdev@gmail.com>).
 - T1 was paused mid-run earlier: partial scaffold left untracked (`package.json`, `package-lock.json`, `.nvmrc`, `astro.config.mjs`, `tsconfig.json`, `vitest.config.ts`).
 
+- T5 commit `cb5cd1d`; RDD assess (base `17c47db`): medium, `under_budget`. Every per-commit assessment returned `review_due: false`, so no native review ran; the slice stays pending under ordinary policy.
+
 ## Next step
 
-T1 (delegated writer).
+T6 deploy to Netlify — waiting for the user's explicit authorization of account, method and credentials. Nothing has been published.
