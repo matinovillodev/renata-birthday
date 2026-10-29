@@ -1,0 +1,27 @@
+# Netlify settings for the invitation (static Astro site).
+# Netlify sets the `URL` environment variable on its builds; astro.config.mjs
+# uses it to build absolute Open Graph URLs.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "24"
+
+# Every page and file: not indexed by search engines, safer defaults.
+# No Content-Security-Policy yet: the inline bootstrap script and the Google
+# Maps iframe need a carefully tuned policy (see README, "Possible follow-ups").
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
+
+# Build assets have content hashes in their names, so they never change.
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
