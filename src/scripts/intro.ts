@@ -43,6 +43,9 @@ export function initIntro({ motion, smooth, dust }: IntroDeps): void {
   button.addEventListener('click', async () => {
     if (opening) return;
     opening = true;
+    // The guest always lands on the hero, even if the locked page was
+    // scrolled programmatically while the curtain was up.
+    window.scrollTo(0, 0);
     root.classList.add('intro-opening'); // lifts the fairy-dust layer above the curtain
     const burstOrigin = intro.querySelector('[data-intro-burst]')?.getBoundingClientRect();
     if (burstOrigin) dust.burst(burstOrigin.left, burstOrigin.top, INTRO_BURST_SCALE);
