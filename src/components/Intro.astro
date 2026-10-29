@@ -1,0 +1,98 @@
+---
+/**
+ * Opening curtain ("Abrir invitación") that covers the hero.
+ *
+ * Progressive enhancement: it is NOT rendered visibly by default, so without
+ * JavaScript the invitation is fully visible and scrollable. T3 shows it by
+ * adding the `js` class to <html> (only once its script can open it), wires
+ * `[data-intro-open]`, fills `[data-intro-burst]` and removes the curtain.
+ */
+import { copy } from '../data/event';
+import StarIcon from './StarIcon.astro';
+---
+
+<div class="intro" data-intro>
+  <div class="intro__emblem">
+    <StarIcon size={64} color="var(--color-gold)" class="intro__star" />
+    <div class="intro__burst" data-intro-burst aria-hidden="true"></div>
+  </div>
+  <p class="eyebrow intro__eyebrow">{copy.intro.eyebrow}</p>
+  <p class="display intro__name">{copy.intro.name}</p>
+  <button type="button" class="btn btn--light intro__open" data-intro-open>
+    <svg
+      viewBox="0 0 24 24"
+      width="22"
+      height="22"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+      focusable="false"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg
+    >
+    {copy.intro.openButton}
+  </button>
+</div>
+
+<style>
+  .intro {
+    display: none;
+  }
+
+  :global(html.js) .intro {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 40;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    height: var(--screen-height);
+    padding: 24px;
+    background: var(--color-forest);
+    color: var(--color-ivory);
+    text-align: center;
+  }
+
+  .intro__emblem {
+    position: relative;
+    width: 64px;
+    height: 64px;
+  }
+
+  .intro__emblem :global(.intro__star) {
+    filter: drop-shadow(0 0 16px rgb(216 183 106 / 0.7));
+  }
+
+  /* Burst origin at the star's center; T3 renders the sparkles inside. */
+  .intro__burst {
+    position: absolute;
+    top: 32px;
+    left: 32px;
+    width: 0;
+    height: 0;
+  }
+
+  .intro__eyebrow {
+    margin-top: 12px;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: var(--color-gold);
+  }
+
+  .intro__name {
+    font-size: 76px;
+    font-style: italic;
+    line-height: 1;
+    color: var(--color-pink-light);
+  }
+
+  .intro__open {
+    margin-top: 32px;
+    box-shadow: 0 0 32px rgb(216 183 106 / 0.35);
+  }
+</style>

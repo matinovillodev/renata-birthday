@@ -1,0 +1,83 @@
+---
+/**
+ * Fixed side navigation: one thin dash per section, each a real link with a
+ * 44x44px hit area. Text blocks keep a 44px side gutter (--gutter) so the
+ * hit areas never sit on top of text.
+ *
+ * T3 hook: set `aria-current="true"` on the link of the section in view
+ * (scroll spy); that link renders as the wide gold dash.
+ */
+import { copy } from '../data/event';
+---
+
+<nav class="side-nav" aria-label={copy.nav.ariaLabel}>
+  <ul class="side-nav__list">
+    {
+      copy.nav.items.map((item) => (
+        <li>
+          <a class="side-nav__link" href={`#${item.id}`} title={item.label} data-nav-link={item.id}>
+            <span class="side-nav__dash" aria-hidden="true" />
+            <span class="visually-hidden">{item.label}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+  .side-nav {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    z-index: 35;
+    transform: translateY(-50%);
+    /* Keeps the light dashes visible over the ivory and sand panels. */
+    filter: drop-shadow(0 0 2px rgb(20 28 22 / 0.55));
+  }
+
+  .side-nav__list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .side-nav__link {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: var(--tap-size);
+    height: var(--tap-size);
+    padding-right: 10px;
+  }
+
+  .side-nav__dash {
+    display: block;
+    width: 12px;
+    height: 2px;
+    border-radius: 2px;
+    background: rgb(246 241 231 / 0.75);
+    transition:
+      width 0.3s ease,
+      background-color 0.3s ease;
+  }
+
+  .side-nav__link:hover .side-nav__dash,
+  .side-nav__link:focus-visible .side-nav__dash {
+    width: 20px;
+  }
+
+  .side-nav__link[aria-current='true'] .side-nav__dash {
+    width: 26px;
+    background: var(--color-gold);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .side-nav__dash {
+      transition: none;
+    }
+  }
+</style>

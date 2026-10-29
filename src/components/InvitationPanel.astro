@@ -1,0 +1,76 @@
+---
+/** #invitacion: ivory sheet with the invitation text, sliding over the hero. */
+import { copy } from '../data/event';
+import StarIcon from './StarIcon.astro';
+---
+
+<section id="invitacion" class="sheet sheet--ivory invitation" aria-labelledby="invitacion-title">
+  <svg
+    class="invitation__butterfly"
+    viewBox="0 0 120 64"
+    width="104"
+    height="56"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.5"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <path d="M60 36C48 8 18 0 10 12C2 26 30 38 60 36Z"></path>
+    <path d="M60 38C44 42 26 56 34 62C42 66 54 52 60 38Z"></path>
+    <path d="M60 36C72 8 102 0 110 12C118 26 90 38 60 36Z"></path>
+    <path d="M60 38C76 42 94 56 86 62C78 66 66 52 60 38Z"></path>
+  </svg>
+  <h2 id="invitacion-title" class="display sheet__title invitation__title">{copy.invitation.heading}</h2>
+  <p class="invitation__body">{copy.invitation.body}</p>
+  <p class="invitation__hint" data-fairy-dust-hint>
+    <StarIcon size={14} color="var(--color-gold-deep)" />
+    {copy.invitation.sprinkleHint}
+  </p>
+</section>
+
+<style>
+  .invitation {
+    padding-bottom: 104px;
+  }
+
+  .invitation__butterfly {
+    margin: 0 auto;
+    color: var(--color-gold-deep);
+  }
+
+  .invitation__title {
+    max-width: 14ch;
+    margin: 20px auto 0;
+  }
+
+  .invitation__body {
+    max-width: 34ch;
+    margin: 24px auto 0;
+    font-size: 20px;
+    line-height: 1.7;
+  }
+
+  /*
+   * The hint promises fairy dust on tap, which only exists once T3's script
+   * runs (html.js) and motion is allowed; otherwise it stays hidden.
+   */
+  .invitation__hint {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    margin-top: 28px;
+    font-size: 14px;
+    color: var(--color-ink-muted);
+  }
+
+  :global(html.js) .invitation__hint {
+    display: inline-flex;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.js) .invitation__hint {
+      display: none;
+    }
+  }
+</style>

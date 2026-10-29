@@ -1,0 +1,82 @@
+---
+/**
+ * RSVP sheet: opens WhatsApp with a pre-filled message. The page never says
+ * the RSVP was sent; the note explains that sending it in WhatsApp confirms.
+ * The default slot renders after the note (the closing footer).
+ */
+import { copy } from '../data/event';
+import StarIcon from './StarIcon.astro';
+
+interface Props {
+  /** wa.me link built from the event data. */
+  whatsappUrl: string;
+}
+
+const { whatsappUrl } = Astro.props;
+---
+
+<section class="sheet sheet--ivory rsvp" aria-labelledby="rsvp-title">
+  <div class="rsvp__stars" aria-hidden="true">
+    <StarIcon size={12} color="var(--color-gold-deep)" />
+    <StarIcon size={20} color="var(--color-gold-deep)" />
+    <StarIcon size={12} color="var(--color-gold-deep)" />
+  </div>
+  <h2 id="rsvp-title" class="display sheet__title rsvp__title">{copy.rsvp.heading}</h2>
+  <p class="rsvp__body">{copy.rsvp.body}</p>
+  <a class="btn rsvp__whatsapp" href={whatsappUrl} target="_blank" rel="noopener" data-rsvp-link>
+    <svg
+      viewBox="0 0 24 24"
+      width="22"
+      height="22"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+      focusable="false"><path d="M4 19.5l1.3-3.9A8 8 0 1 1 8.4 18.7L4 19.5z"></path></svg
+    >
+    {copy.rsvp.button}
+  </a>
+  <p class="rsvp__note">{copy.rsvp.note}</p>
+  <slot />
+</section>
+
+<style>
+  .rsvp__stars {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .rsvp__title {
+    margin-top: 16px;
+  }
+
+  .rsvp__body {
+    max-width: 34ch;
+    margin: 18px auto 0;
+    font-size: 19px;
+    line-height: 1.7;
+  }
+
+  .rsvp__whatsapp {
+    margin-top: 28px;
+    padding: 0 30px;
+    background: var(--color-green);
+    color: var(--color-white);
+    box-shadow: 0 10px 24px rgb(47 74 54 / 0.28);
+  }
+
+  .rsvp__whatsapp:hover {
+    color: var(--color-white);
+  }
+
+  .rsvp__note {
+    max-width: 36ch;
+    margin: 18px auto 0;
+    font-size: 15px;
+    color: var(--color-ink-muted);
+  }
+</style>

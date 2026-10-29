@@ -1,0 +1,66 @@
+---
+/**
+ * Sticky chapter title over a full-bleed photo ("Capítulo II · El gran día",
+ * "Capítulo III · ¿Nos acompañan?"). The chapter's sheet scrolls over it.
+ *
+ * Phones (viewport narrower than 3:4) get the centered 3:4 crop of the
+ * landscape master, so they skip the unseen sides; `narrowFocus` re-aims the
+ * visible slice at the focal point V3 uses (sharp can only crop by keyword).
+ */
+import type { ImageMetadata } from 'astro';
+import ArtDirectedPhoto from './ArtDirectedPhoto.astro';
+import PhotoScreen from './PhotoScreen.astro';
+
+interface Props {
+  photo: ImageMetadata;
+  /** Spanish description of the photo. */
+  alt: string;
+  /** Focal point on the full photo (V3 object-position), for wide viewports. */
+  focus: string;
+  /** object-position inside the centered 3:4 crop that shows V3's slice on a 390x844 phone. */
+  narrowFocus: string;
+  eyebrow: string;
+  title: string;
+  /** Title size as in V3, e.g. `clamp(56px, 14vw, 128px)`. */
+  titleSize: string;
+}
+
+const { photo, alt, focus, narrowFocus, eyebrow, title, titleSize } = Astro.props;
+---
+
+<PhotoScreen variant="chapter">
+  <ArtDirectedPhoto
+    slot="photo"
+    alt={alt}
+    switchAt="3/4"
+    data-parallax="photo"
+    narrow={{
+      src: photo,
+      aspectRatio: 3 / 4,
+      cropPosition: 'center',
+      widths: [640, 828, 1080, 1202],
+      sizes: 'max(100vw, min(75vh, 825px))',
+      objectPosition: narrowFocus,
+    }}
+    wide={{
+      src: photo,
+      widths: [960, 1280, 1600, 1920, 2400],
+      sizes: 'max(100vw, min(150vh, 1650px))',
+      objectPosition: focus,
+    }}
+  />
+  <p class="eyebrow chapter__eyebrow">{eyebrow}</p>
+  <p class="display chapter__title" style={`font-size: ${titleSize}`}>{title}</p>
+</PhotoScreen>
+
+<style>
+  .chapter__eyebrow {
+    color: var(--color-gold-light);
+  }
+
+  .chapter__title {
+    margin-top: 8px;
+    font-style: italic;
+    line-height: 1;
+  }
+</style>

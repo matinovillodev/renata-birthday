@@ -1,0 +1,25 @@
+---
+/** Four-point sparkle star used across the V3 design (decorative). */
+interface Props {
+  size: number;
+  /** Any CSS color, e.g. `var(--color-gold)`. */
+  color: string;
+  class?: string;
+}
+
+const { size, color, class: className } = Astro.props;
+---
+
+<svg
+  class={className}
+  viewBox="0 0 24 24"
+  width={size}
+  height={size}
+  style={`color: ${color}`}
+  aria-hidden="true"
+  focusable="false"
+>
+  <path
+    d="M12 0C12.9 7.2 16.8 11.1 24 12C16.8 12.9 12.9 16.8 12 24C11.1 16.8 7.2 12.9 0 12C7.2 11.1 11.1 7.2 12 0Z"
+    fill="currentColor"></path>
+</svg>

@@ -1,0 +1,48 @@
+---
+/** Closing footer at the end of the RSVP sheet. */
+import { copy, event } from '../data/event';
+import type { EventDateLabels } from '../lib/event-date';
+import DateLine from './DateLine.astro';
+
+interface Props {
+  /** Day and time labels derived from the event data. */
+  date: EventDateLabels;
+}
+
+const { date } = Astro.props;
+---
+
+<footer class="closing">
+  <p class="display closing__title">{copy.closing.heading}</p>
+  <p class="closing__date"><DateLine date={date} /></p>
+  <p class="closing__venue">{event.venue.name}</p>
+</footer>
+
+<style>
+  .closing {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 104px 0 72px;
+  }
+
+  .closing__title {
+    font-size: clamp(52px, 14vw, 104px);
+    font-style: italic;
+    line-height: 1;
+    color: var(--color-rose);
+  }
+
+  .closing__date {
+    margin-top: 6px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .closing__venue {
+    font-size: 17px;
+  }
+</style>

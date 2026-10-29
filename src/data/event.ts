@@ -148,6 +148,8 @@ export const copy = {
   map: {
     heading: 'Cómo llegar',
     description: `El mapa muestra la ubicación exacta del ${venueName}.`,
+    /** Accessible name of the map iframe (not visible; not in V3, which only had a mock map). */
+    iframeTitle: `Mapa de ubicación del ${venueName}`,
   },
 
   /** Chapter III photo title. */

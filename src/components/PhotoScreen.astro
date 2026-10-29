@@ -1,0 +1,102 @@
+---
+/**
+ * Sticky full-screen photo with text anchored to the bottom (V3 "scr").
+ * The next sibling sheet scrolls over it.
+ *
+ * Slots: `photo` (an ArtDirectedPhoto), `decor` (decorative overlays such as
+ * twinkles) and the default slot (the text block).
+ *
+ * T3 hooks: `data-screen` on the sticky box, `data-parallax="float"` on the
+ * text block (V3 moves it up and fades it while scrolling).
+ */
+interface Props {
+  /** `hero` uses V3's hero gradient and spacing; `chapter` the chapter ones. */
+  variant: 'hero' | 'chapter';
+}
+
+const { variant } = Astro.props;
+---
+
+<div class:list={['screen', `screen--${variant}`]} data-screen>
+  <slot name="photo" />
+  <div class="screen__shade" aria-hidden="true"></div>
+  <slot name="decor" />
+  <div class="screen__copy" data-parallax="float">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .screen {
+    position: sticky;
+    top: 0;
+    z-index: 0;
+    height: var(--screen-height);
+    overflow: hidden;
+    background: var(--color-forest);
+    color: var(--color-ivory);
+  }
+
+  .screen__shade {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .screen--hero .screen__shade {
+    background: linear-gradient(
+      180deg,
+      rgb(var(--tint-forest) / 0.25) 0%,
+      rgb(var(--tint-forest) / 0) 30%,
+      rgb(var(--tint-forest) / 0.1) 50%,
+      rgb(var(--tint-forest) / 0.78) 100%
+    );
+  }
+
+  .screen--chapter .screen__shade {
+    background: linear-gradient(180deg, rgb(var(--tint-forest) / 0) 40%, rgb(var(--tint-forest) / 0.72) 100%);
+  }
+
+  .screen__copy {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    padding: 0 var(--gutter) 80px;
+    text-align: center;
+    text-shadow: 0 1px 3px rgb(var(--tint-forest) / 0.35);
+  }
+
+  /*
+   * Text-anchored scrim (not in V3): darkens only the band behind the text,
+   * fading in above it, so light text keeps AA contrast on any photo area.
+   */
+  .screen__copy::before {
+    content: '';
+    position: absolute;
+    inset: calc(-1 * var(--scrim-fade)) 0 0;
+    z-index: -1;
+    background: linear-gradient(
+      180deg,
+      rgb(var(--tint-forest) / 0) 0,
+      rgb(var(--tint-forest) / var(--scrim-alpha)) var(--scrim-fade),
+      rgb(var(--tint-forest) / var(--scrim-alpha)) 100%
+    );
+    pointer-events: none;
+  }
+
+  .screen--hero .screen__copy {
+    padding-bottom: 72px;
+  }
+
+  /*
+   * Keep the hero text below Renata's face where the screen is short
+   * relative to the photo: landscape screens and short portrait phones.
+   */
+  @media (min-aspect-ratio: 4/3), (max-height: 700px) {
+    .screen--hero .screen__copy {
+      padding-bottom: 40px;
+    }
+  }
+</style>

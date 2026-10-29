@@ -1,0 +1,142 @@
+---
+/**
+ * Full-bleed, art-directed photo: one rendition for narrow viewports and
+ * another from an aspect-ratio breakpoint up, each in AVIF and WebP with a
+ * width-based srcset, plus a single JPEG `<img>` fallback for old browsers.
+ *
+ * Renditions can be cropped at build time (`aspectRatio` + `cropPosition`) so
+ * phones download only the part of the photo they can show, and so Renata's
+ * face stays clear of the text placed at the bottom of the screen.
+ *
+ * The `<picture>` fills its positioned parent. Extra `data-*` attributes are
+ * forwarded to it (T3 hooks the photo parallax on `data-parallax="photo"`).
+ */
+import type { ImageMetadata } from 'astro';
+import { getImage } from 'astro:assets';
+
+/**
+ * Anchor of a build-time crop. Astro passes `position` straight to sharp,
+ * which only accepts keywords (CSS percentages make the transform fail).
+ */
+type CropAnchor = 'center' | 'top' | 'bottom' | 'left' | 'right';
+
+interface Rendition {
+  /** Master photo from src/assets/photos. */
+  src: ImageMetadata;
+  /** Build-time crop as width / height. Omit to keep the master's ratio. */
+  aspectRatio?: number;
+  /** Which part of the master the build-time crop keeps. */
+  cropPosition?: CropAnchor;
+  /** Candidate widths in px; widths above the crop's width are capped to it. */
+  widths: number[];
+  /** `sizes` attribute: rendered CSS width of the image in this layout. */
+  sizes: string;
+  /** CSS `object-position` used to display this rendition. */
+  objectPosition: string;
+}
+
+interface Props {
+  /** Rendition below the breakpoint (phones, portrait tablets). */
+  narrow: Rendition;
+  /** Rendition from the breakpoint up. */
+  wide: Rendition;
+  /** Viewport aspect ratio (width/height) from which `wide` is used. */
+  switchAt: '4/3' | '3/4';
+  /** Spanish description; empty string for decorative photos. */
+  alt: string;
+  /** Above-the-fold photo: eager load with high fetch priority. */
+  priority?: boolean;
+  class?: string;
+  [dataAttribute: `data-${string}`]: string | undefined;
+}
+
+const { narrow, wide, switchAt, alt, priority = false, class: className, ...rest } = Astro.props;
+
+type Format = 'avif' | 'webp' | 'jpeg';
+
+function ratioOf(rendition: Rendition): number {
+  return rendition.aspectRatio ?? rendition.src.width / rendition.src.height;
+}
+
+/** Widest rendition the master can provide at the crop ratio, without upscaling. */
+function maxWidthOf(rendition: Rendition): number {
+  return Math.min(rendition.src.width, Math.floor(rendition.src.height * ratioOf(rendition)));
+}
+
+function render(rendition: Rendition, width: number, format: Format) {
+  return getImage({
+    src: rendition.src,
+    width,
+    height: Math.round(width / ratioOf(rendition)),
+    fit: 'cover',
+    position: rendition.cropPosition ?? 'center',
+    format,
+  });
+}
+
+async function srcsetOf(rendition: Rendition, format: Format): Promise<string> {
+  const maxWidth = maxWidthOf(rendition);
+  const widths = [...new Set(rendition.widths.map((w) => Math.min(w, maxWidth)))].sort((a, b) => a - b);
+  const images = await Promise.all(widths.map((w) => render(rendition, w, format)));
+  return images.map((image, i) => `${image.src} ${widths[i]}w`).join(', ');
+}
+
+const media = `(min-aspect-ratio: ${switchAt})`;
+const [wideAvif, wideWebp, narrowAvif, narrowWebp] = await Promise.all([
+  srcsetOf(wide, 'avif'),
+  srcsetOf(wide, 'webp'),
+  srcsetOf(narrow, 'avif'),
+  srcsetOf(narrow, 'webp'),
+]);
+
+const fallbackWidth = Math.min(1080, maxWidthOf(narrow));
+const fallback = await render(narrow, fallbackWidth, 'jpeg');
+
+const style = `--position-narrow: ${narrow.objectPosition}; --position-wide: ${wide.objectPosition}`;
+const switchClass = switchAt === '4/3' ? 'photo--switch-4-3' : 'photo--switch-3-4';
+---
+
+<picture class:list={['photo', switchClass, className]} style={style} {...rest}>
+  <source media={media} type="image/avif" srcset={wideAvif} sizes={wide.sizes} />
+  <source media={media} type="image/webp" srcset={wideWebp} sizes={wide.sizes} />
+  <source type="image/avif" srcset={narrowAvif} sizes={narrow.sizes} />
+  <source type="image/webp" srcset={narrowWebp} sizes={narrow.sizes} />
+  <img
+    src={fallback.src}
+    width={fallbackWidth}
+    height={Math.round(fallbackWidth / ratioOf(narrow))}
+    alt={alt}
+    loading={priority ? 'eager' : 'lazy'}
+    decoding="async"
+    fetchpriority={priority ? 'high' : 'auto'}
+  />
+</picture>
+
+<style>
+  .photo {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+
+  .photo img {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    object-position: var(--position-narrow);
+  }
+
+  /* Keep these breakpoints in sync with the `switchAt` values above. */
+  @media (min-aspect-ratio: 4/3) {
+    .photo--switch-4-3 img {
+      object-position: var(--position-wide);
+    }
+  }
+
+  @media (min-aspect-ratio: 3/4) {
+    .photo--switch-3-4 img {
+      object-position: var(--position-wide);
+    }
+  }
+</style>

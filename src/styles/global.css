@@ -1,0 +1,154 @@
+/* Global base styles. Component styles live in each component. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--color-forest);
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-forest);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+}
+
+img,
+picture,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--color-green);
+}
+
+a:hover {
+  color: var(--color-forest);
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus-outer);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px var(--focus-inner);
+}
+
+/* Fraunces display text: softened as in V3, optical size left on auto. */
+.display {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-variation-settings: var(--font-soft);
+}
+
+/* Small uppercase label used above titles. */
+.eyebrow {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+/*
+ * Rounded panel that scrolls over a sticky photo screen (V3 sections
+ * #invitacion, #el-gran-dia and the RSVP panel).
+ */
+.sheet {
+  position: relative;
+  z-index: 2;
+  padding: 88px var(--gutter) 0;
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+  box-shadow: var(--shadow-sheet);
+  text-align: center;
+}
+
+.sheet--ivory {
+  background: var(--color-ivory);
+}
+
+.sheet--sand {
+  background: var(--color-sand);
+}
+
+.sheet__title {
+  font-size: clamp(40px, 9vw, 72px);
+  line-height: 1.05;
+  color: var(--color-green);
+}
+
+/* Pill button / link. */
+.btn {
+  text-shadow: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: var(--button-height);
+  padding: 0 32px;
+  border: none;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn--light {
+  background: var(--color-ivory);
+  color: var(--color-forest);
+}
+
+.btn--light:hover {
+  color: var(--color-forest);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .btn {
+    transition: none;
+  }
+
+  .btn:hover {
+    transform: none;
+  }
+}

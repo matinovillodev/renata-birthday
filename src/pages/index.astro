@@ -1,26 +1,125 @@
 ---
-// Temporary placeholder that proves the data module renders end to end.
-// The V3 "Inmersiva con parallax" layout replaces this markup in T2.
+/**
+ * The invitation: V3 "Inmersiva con parallax", static layer.
+ * Every text and fact comes from src/data/event.ts.
+ *
+ * Section anchors (side nav targets): #inicio, #invitacion, #el-gran-dia,
+ * #como-llegar, #confirmar. Chapters carry `data-chapter` (1-4) for T3.
+ */
+import { getImage } from 'astro:assets';
+import heroLandscape from '../assets/photos/hero-landscape.jpg';
+import ChapterScreen from '../components/ChapterScreen.astro';
+import Closing from '../components/Closing.astro';
+import EventDetails from '../components/EventDetails.astro';
+import Hero from '../components/Hero.astro';
+import Intro from '../components/Intro.astro';
+import InvitationPanel from '../components/InvitationPanel.astro';
+import PhotoBand from '../components/PhotoBand.astro';
+import RsvpPanel from '../components/RsvpPanel.astro';
+import SideNav from '../components/SideNav.astro';
+import bandLandscape from '../assets/photos/band-landscape.jpg';
+import closingLandscape from '../assets/photos/closing-landscape.jpg';
 import { copy, event } from '../data/event';
 import { formatEventDate } from '../lib/event-date';
+import { buildWhatsAppUrl } from '../lib/whatsapp';
+import Base from '../layouts/Base.astro';
 
-const { dayLabel, timeLabel } = formatEventDate(event.startsAt, event.timeZone);
+const date = formatEventDate(event.startsAt, event.timeZone);
+const description = [
+  `${copy.hero.eyebrow} ${event.childName}`,
+  date.dayLabel,
+  date.timeLabel,
+  event.venue.name,
+].join(copy.dateTimeSeparator);
+const whatsappUrl = buildWhatsAppUrl(event.whatsapp.digits, event.rsvp.message);
+
+// Social preview: 1200x630 crop of the landscape hero, keeping Renata's face.
+const OG_WIDTH = 1200;
+const OG_HEIGHT = 630;
+const ogImage = await getImage({
+  src: heroLandscape,
+  width: OG_WIDTH,
+  height: OG_HEIGHT,
+  fit: 'cover',
+  position: 'center', // sharp keyword; the face stays in frame
+
+  format: 'jpeg',
+  quality: 82,
+});
+const ogImageUrl = new URL(ogImage.src, Astro.site ?? Astro.url).href;
 ---
 
-<!doctype html>
-<html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="robots" content="noindex" />
-    <title>{copy.documentTitle}</title>
-  </head>
-  <body>
-    <main>
-      <p>{copy.hero.eyebrow}</p>
-      <h1>{event.childName}</h1>
-      <p>{dayLabel}{copy.dateTimeSeparator}{timeLabel}</p>
-      <p>{event.venue.name}</p>
-    </main>
-  </body>
-</html>
+<Base
+  title={copy.documentTitle}
+  description={description}
+  image={{ url: ogImageUrl, alt: copy.hero.photoAlt, width: OG_WIDTH, height: OG_HEIGHT }}
+>
+  <SideNav />
+  <main class="invitation">
+    <Intro />
+
+    <div id="inicio" class="chapter chapter--1" data-chapter="1">
+      <Hero date={date} />
+      <InvitationPanel />
+    </div>
+
+    <PhotoBand />
+
+    <div class="chapter chapter--3" data-chapter="3">
+      <ChapterScreen
+        photo={bandLandscape}
+        alt={copy.chapterDay.photoAlt}
+        focus="46% 50%"
+        narrowFocus="35% 50%"
+        eyebrow={copy.chapterDay.eyebrow}
+        title={copy.chapterDay.title}
+        titleSize="clamp(56px, 14vw, 128px)"
+      />
+      <EventDetails dayLabel={date.dayLabel} timeLabel={date.timeLabel} />
+    </div>
+
+    <div id="confirmar" class="chapter chapter--4" data-chapter="4">
+      <ChapterScreen
+        photo={closingLandscape}
+        alt={copy.chapterRsvp.photoAlt}
+        focus="38% 40%"
+        narrowFocus="6% 50%"
+        eyebrow={copy.chapterRsvp.eyebrow}
+        title={copy.chapterRsvp.title}
+        titleSize="clamp(52px, 13vw, 120px)"
+      />
+      <RsvpPanel whatsappUrl={whatsappUrl}>
+        <Closing date={date} />
+      </RsvpPanel>
+    </div>
+  </main>
+
+  <!-- T3 mounts the fairy-dust particles here (tap anywhere). -->
+  <div class="fairy-dust" data-fairy-dust aria-hidden="true"></div>
+</Base>
+
+<style>
+  .invitation {
+    position: relative;
+  }
+
+  .chapter {
+    position: relative;
+  }
+
+  /* Later chapters paint over earlier ones, as in V3. */
+  .chapter--3 {
+    z-index: 4;
+  }
+
+  .chapter--4 {
+    z-index: 5;
+  }
+
+  .fairy-dust {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    pointer-events: none;
+  }
+</style>
