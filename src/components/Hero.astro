@@ -25,9 +25,12 @@ const { date } = Astro.props;
 /*
  * The hero renditions drop the top of each photo (background only) so that
  * Renata's face sits higher on screen and the text below never covers it.
+ * Landscape: 0.14 together with the softer 1.06 zoom (animations.ts) and the
+ * 18svh name cap below keeps the headband ~40px from the top and the chin
+ * above the text on 1440x900, 1280x800 and 1024x768.
  */
 const PORTRAIT_TOP_CROP = 0.12;
-const LANDSCAPE_TOP_CROP = 0.15;
+const LANDSCAPE_TOP_CROP = 0.14;
 
 const twinkles = [
   { left: '12%', top: '16%', size: 18, delay: '-0.4s' },
@@ -154,6 +157,13 @@ const twinkles = [
   @supports (height: 100svh) {
     .hero__name {
       font-size: clamp(64px, min(max(88px, 24vw), 20svh), 200px);
+    }
+
+    /* Landscape shows more of the photo above the face (smaller top crop). */
+    @media (min-aspect-ratio: 4/3) {
+      .hero__name {
+        font-size: clamp(64px, min(max(88px, 24vw), 18svh), 200px);
+      }
     }
   }
 

@@ -13,6 +13,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 const MOTION_ALLOWED = '(prefers-reduced-motion: no-preference)';
+/** Same breakpoint as the hero's landscape photo (Hero.astro, switchAt="4/3"). */
+const WIDE_SCREEN = '(min-aspect-ratio: 4/3)';
 
 /** V3 `.rise.go > :nth-child(n)` delays, in seconds. */
 const RISE_DELAYS = [0.35, 0.45, 0.6, 0.75, 0.9];
@@ -20,6 +22,11 @@ const RISE_OFFSET_PX = 22;
 /** V3 parallax constants. */
 const PHOTO_SHIFT_PERCENT = 18;
 const PHOTO_ZOOM = 1.14;
+/**
+ * Softer hero zoom on landscape screens (user decision): at 1.14 the zoom
+ * clips Renata's headband on 16:10 and 4:3 screens.
+ */
+const HERO_WIDE_ZOOM = 1.06;
 const PHOTO_ZOOM_SCREENS = 1.2;
 const FLOAT_RISE = 0.35; // of the viewport height per screen scrolled
 const FLOAT_FADE_START = 0.15; // screens
@@ -42,20 +49,21 @@ function hostOf(element: Element): Element | null {
   return element.closest('[data-chapter]');
 }
 
-function setupPhotoParallax(): void {
+function setupPhotoParallax(wideScreen: boolean): void {
   for (const photo of gsap.utils.toArray<HTMLElement>('[data-parallax="photo"]')) {
     const host = hostOf(photo);
     if (!host) continue;
+    const zoom = wideScreen && host.matches('[data-chapter="1"]') ? HERO_WIDE_ZOOM : PHOTO_ZOOM;
     // Approach: the photo settles from -18% while its chapter scrolls into view.
     gsap.fromTo(
       photo,
       { yPercent: -PHOTO_SHIFT_PERCENT },
       { yPercent: 0, ease: 'none', scrollTrigger: { trigger: host, start: 'top bottom', end: 'top top', scrub: true } },
     );
-    // Stuck: it zooms out from 1.14 to 1 while the sheet covers it.
+    // Stuck: it zooms out to 1 while the sheet covers it.
     gsap.fromTo(
       photo,
-      { scale: PHOTO_ZOOM },
+      { scale: zoom },
       {
         scale: 1,
         ease: 'none',
@@ -119,8 +127,12 @@ export function initMotion(): Motion {
   let current: Motion = still;
   const root = document.documentElement;
 
-  gsap.matchMedia().add(MOTION_ALLOWED, (context) => {
-    setupPhotoParallax();
+  // Re-created whenever either condition flips (e.g. a tablet is rotated).
+  gsap.matchMedia().add({ motion: MOTION_ALLOWED, wide: WIDE_SCREEN }, (context) => {
+    const { motion = false, wide = false } = context.conditions ?? {};
+    if (!motion) return;
+
+    setupPhotoParallax(wide);
     setupFloatingText();
     setupStrips();
     setupSheetReveals();
