@@ -52,6 +52,8 @@
   --radius-pill: 999px;
   --radius-thumb: 18px;
   --shadow-sheet: 0 -24px 48px rgb(var(--tint-dark) / 0.22);
+  /* The first sheet rises over the bright hero veil, where the full shadow reads as a grey band. */
+  --shadow-sheet-on-light: 0 -12px 32px rgb(var(--tint-dark) / 0.07);
   --button-height: 56px;
   --tap-size: 44px;
 
