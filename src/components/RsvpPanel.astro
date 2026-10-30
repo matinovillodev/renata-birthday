@@ -1,8 +1,12 @@
 ---
 /**
- * RSVP sheet: opens WhatsApp with a pre-filled message. The page never says
- * the RSVP was sent. The default slot renders after the button (the closing
- * footer).
+ * RSVP sheet (#confirmar): opens WhatsApp with a pre-filled message. The page
+ * never says the RSVP was sent. The default slot renders after the button
+ * (the closing footer).
+ *
+ * It is the `#confirmar` anchor target (hero CTA, side nav, shared links), so
+ * it is at least one screen tall: every anchor jump can bring it to the top,
+ * with the WhatsApp button in view.
  */
 import { copy } from '../data/event';
 import StarIcon from './StarIcon.astro';
@@ -15,32 +19,52 @@ interface Props {
 const { whatsappUrl } = Astro.props;
 ---
 
-<section class="sheet sheet--ivory rsvp" aria-labelledby="rsvp-title">
-  <div class="rsvp__stars" aria-hidden="true">
-    <StarIcon size={12} color="var(--color-gold-deep)" />
-    <StarIcon size={20} color="var(--color-gold-deep)" />
-    <StarIcon size={12} color="var(--color-gold-deep)" />
+<section id="confirmar" class="sheet sheet--ivory rsvp" aria-labelledby="rsvp-title">
+  <div class="rsvp__cta">
+    <div class="rsvp__stars" aria-hidden="true">
+      <StarIcon size={12} color="var(--color-gold-deep)" />
+      <StarIcon size={20} color="var(--color-gold-deep)" />
+      <StarIcon size={12} color="var(--color-gold-deep)" />
+    </div>
+    <h2 id="rsvp-title" class="display sheet__title rsvp__title">{copy.rsvp.heading}</h2>
+    <a class="btn rsvp__whatsapp" href={whatsappUrl} target="_blank" rel="noopener" data-rsvp-link>
+      <svg
+        viewBox="0 0 24 24"
+        width="22"
+        height="22"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        focusable="false"><path d="M4 19.5l1.3-3.9A8 8 0 1 1 8.4 18.7L4 19.5z"></path></svg
+      >
+      {copy.rsvp.button}
+    </a>
   </div>
-  <h2 id="rsvp-title" class="display sheet__title rsvp__title">{copy.rsvp.heading}</h2>
-  <a class="btn rsvp__whatsapp" href={whatsappUrl} target="_blank" rel="noopener" data-rsvp-link>
-    <svg
-      viewBox="0 0 24 24"
-      width="22"
-      height="22"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="1.8"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      aria-hidden="true"
-      focusable="false"><path d="M4 19.5l1.3-3.9A8 8 0 1 1 8.4 18.7L4 19.5z"></path></svg
-    >
-    {copy.rsvp.button}
-  </a>
   <slot />
 </section>
 
 <style>
+  /*
+   * At least one screen tall (see above). When the content is shorter than
+   * the screen, the call to action sits centered in the space above the
+   * closing footer, which stays at the bottom.
+   */
+  .rsvp {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .rsvp__cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-block: auto;
+  }
+
   .rsvp__stars {
     display: flex;
     align-items: flex-end;

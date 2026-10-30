@@ -14,8 +14,10 @@ const { date } = Astro.props;
 
 <footer class="closing">
   <p class="display closing__title">{copy.closing.heading}</p>
-  <p class="closing__date"><DateLine date={date} /></p>
-  <p class="closing__venue">{event.venue.name}</p>
+  <div class="closing__when">
+    <p class="closing__date"><DateLine date={date} /></p>
+    <p class="closing__venue">{event.venue.name}</p>
+  </div>
 </footer>
 
 <style>
@@ -23,21 +25,33 @@ const { date } = Astro.props;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
     max-width: 720px;
     margin: 0 auto;
-    padding: 104px 0 72px;
+    padding: clamp(80px, 9vw, 104px) 0 clamp(64px, 6vw, 88px);
   }
 
+  /*
+   * Line-height 1 leaves the italic descenders ("p") at the bottom edge, so
+   * the title keeps room below that scales with it: ~22px at 52px, ~33px at
+   * 104px.
+   */
   .closing__title {
+    margin-bottom: clamp(22px, 0.32em, 36px);
     font-size: clamp(52px, 14vw, 104px);
     font-style: italic;
     line-height: 1;
     color: var(--color-rose);
   }
 
+  /* Date and venue read as one block. */
+  .closing__when {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+
   .closing__date {
-    margin-top: 6px;
     font-size: 18px;
     font-weight: 600;
   }
