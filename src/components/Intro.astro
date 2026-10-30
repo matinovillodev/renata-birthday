@@ -6,12 +6,74 @@
  * JavaScript the invitation is fully visible and scrollable. The inline
  * bootstrap adds `intro` to <html> (plain visits only); src/scripts/intro.ts
  * wires `[data-intro-open]`, bursts from `[data-intro-burst]` and removes it.
+ *
+ * Background: an enchanted-forest path (decorative). Portrait screens show it
+ * full-bleed; landscape screens show it sharp at full height over a blurred,
+ * darkened copy of the same file (identical sources, so one download).
+ * T7 motion hooks: `[data-intro-camera]` (idle zoom, "enter the forest" zoom)
+ * and the CSS fireflies.
  */
+import { Picture } from 'astro:assets';
+import forest from '../assets/photos/intro-forest.jpg';
 import { copy } from '../data/event';
 import StarIcon from './StarIcon.astro';
+
+/*
+ * Rendered widths: portrait cover = max(100vw, 56.3vh) (736x1308 source);
+ * landscape = 56.3vh (full height). Widths never exceed the 736px master.
+ */
+const FOREST_WIDTHS = [368, 552, 736];
+const FOREST_SIZES = '(min-aspect-ratio: 4/3) 57vh, max(100vw, 57vh)';
+
+/** Firefly positions (% of the screen), sizes (px) and timings (s), fixed for stable markup. */
+const FIREFLIES = [
+  [8, 18, 4, 11, -2], [22, 72, 5, 13, -7], [31, 9, 3, 9, -4], [44, 84, 4, 12, -1],
+  [57, 22, 5, 14, -9], [66, 63, 3, 10, -3], [78, 12, 4, 12, -6], [88, 47, 5, 13, -11],
+  [14, 41, 3, 10, -5], [36, 57, 4, 11, -8], [51, 37, 3, 9, -2], [72, 88, 4, 14, -10],
+  [93, 77, 3, 11, -4], [4, 90, 5, 12, -7],
+] as const;
 ---
 
 <div class="intro" data-intro>
+  <div class="intro__scene" aria-hidden="true">
+    <div class="intro__camera" data-intro-camera>
+      <Picture
+        src={forest}
+        alt=""
+        formats={['avif', 'webp']}
+        widths={FOREST_WIDTHS}
+        sizes={FOREST_SIZES}
+        loading="eager"
+        decoding="async"
+        class="intro__fill-img"
+        pictureAttributes={{ class: 'intro__fill', 'data-intro-fill': '' }}
+      />
+      <Picture
+        src={forest}
+        alt=""
+        formats={['avif', 'webp']}
+        widths={FOREST_WIDTHS}
+        sizes={FOREST_SIZES}
+        loading="eager"
+        decoding="async"
+        fetchpriority="high"
+        class="intro__photo-img"
+        pictureAttributes={{ class: 'intro__photo', 'data-intro-bg': '' }}
+      />
+    </div>
+    <div class="intro__shade"></div>
+    <div class="intro__fireflies" data-intro-fireflies>
+      {
+        FIREFLIES.map(([left, top, size, duration, delay]) => (
+          <span
+            class="firefly"
+            style={`left: ${left}%; top: ${top}%; --size: ${size}px; --drift: ${duration}s; --delay: ${delay}s`}
+          />
+        ))
+      }
+    </div>
+  </div>
+
   <div class="intro__emblem">
     <StarIcon size={64} color="var(--color-gold)" class="intro__star" />
     <div class="intro__burst" data-intro-burst aria-hidden="true"></div>
@@ -55,9 +117,145 @@ import StarIcon from './StarIcon.astro';
     justify-content: center;
     gap: 12px;
     padding: 24px;
+    overflow: hidden;
     background: var(--color-forest);
     color: var(--color-ivory);
     text-align: center;
+  }
+
+  /* Content sits above the scene. */
+  .intro > :not(.intro__scene) {
+    position: relative;
+    z-index: 1;
+  }
+
+  .intro__eyebrow,
+  .intro__name {
+    text-shadow: 0 1px 3px rgb(var(--tint-forest) / 0.5);
+  }
+
+  .intro__scene {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  /* Zoom target. Origin = the bright end of the path (42% 45% of the photo). */
+  .intro__camera {
+    position: absolute;
+    inset: 0;
+    transform-origin: 42% 45%;
+  }
+
+  .intro__camera :global(.intro__photo),
+  .intro__camera :global(.intro__fill) {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+
+  .intro__camera :global(.intro__photo-img),
+  .intro__camera :global(.intro__fill-img) {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    object-position: 42% 45%;
+  }
+
+  /* Portrait: only the full-bleed photo. */
+  .intro__camera :global(.intro__fill) {
+    display: none;
+  }
+
+  /* Landscape: sharp photo centered at full height over a blurred, darkened fill. */
+  @media (min-aspect-ratio: 4/3) {
+    .intro__camera {
+      /* Path x on screen: 50% - (0.5 - 0.42) x photo width (photo width = 56.3% of the height). */
+      transform-origin: calc(50% - 4.5vh) 45%;
+    }
+
+    .intro__camera :global(.intro__fill) {
+      display: block;
+      transform: scale(1.15);
+    }
+
+    .intro__camera :global(.intro__fill-img) {
+      filter: blur(28px) brightness(0.55);
+    }
+
+    .intro__camera :global(.intro__photo) {
+      right: auto;
+      left: 50%;
+      width: auto;
+      height: 100%;
+      aspect-ratio: 736 / 1308;
+      translate: -50% 0;
+    }
+  }
+
+  /*
+   * V3 forest tint: uniform 50% plus an ellipse behind the text up to 85%.
+   * Simulated worst case (95th percentile over the photo, 360x640 to
+   * 1440x900): eyebrow 4.84:1, name 7.55:1.
+   */
+  .intro__shade {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 45% at 50% 50%, rgb(var(--tint-forest) / 0.7), rgb(var(--tint-forest) / 0)),
+      rgb(var(--tint-forest) / 0.5);
+  }
+
+  /* Fireflies: warm glowing dots that drift and twinkle (transform/opacity only). */
+  .intro__fireflies {
+    position: absolute;
+    inset: 0;
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .intro__fireflies {
+      display: block;
+    }
+  }
+
+  .firefly {
+    position: absolute;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    background: var(--color-gold-light);
+    box-shadow: 0 0 calc(var(--size) * 2) calc(var(--size) / 2) rgb(243 223 166 / 0.6);
+    opacity: 0;
+    animation:
+      firefly-drift var(--drift) ease-in-out var(--delay) infinite alternate,
+      firefly-glow calc(var(--drift) / 3) ease-in-out var(--delay) infinite;
+  }
+
+  @keyframes firefly-drift {
+    0% {
+      transform: translate(0, 0);
+    }
+
+    50% {
+      transform: translate(14px, -22px);
+    }
+
+    100% {
+      transform: translate(-10px, -40px);
+    }
+  }
+
+  @keyframes firefly-glow {
+    0%,
+    100% {
+      opacity: 0.15;
+    }
+
+    50% {
+      opacity: 0.95;
+    }
   }
 
   .intro__emblem {

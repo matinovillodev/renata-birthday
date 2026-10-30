@@ -60,10 +60,16 @@ Replace the files **keeping their names**:
 | `hero-landscape.jpg` | Hero on landscape screens; link preview image; photo band. |
 | `band-landscape.jpg` | Chapter "El gran día"; photo band. |
 | `closing-landscape.jpg` | Chapter "¿Nos acompañan?"; photo band. |
+| `intro-forest.jpg` | Background of the "Abrir invitación" curtain (portrait, 736×1308). |
 
 Each file must be a JPEG in **sRGB**, at most **2400 px** on the long edge, with
 **no EXIF** (location and camera data). Astro generates the small AVIF/WebP
-versions at build time.
+versions at build time. Never upscale a photo: the build only scales down.
+
+> **Usage rights:** `intro-forest.jpg` is a third-party image supplied by the
+> owner of this invitation, not a photo of the family. Its owner must confirm
+> they may use it before the page is shared; otherwise replace it with a photo
+> they own (same name, portrait, sRGB, no EXIF).
 
 New photos frame faces differently. Check the screenshots described under
 [Checks](#checks) and, if needed, adjust:

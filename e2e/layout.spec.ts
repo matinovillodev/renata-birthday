@@ -58,8 +58,14 @@ test('screenshots for face-clearance review', async ({ page }, testInfo) => {
   await page.screenshot({ path: testInfo.outputPath('viewport-inicio.png') });
 
   for (const { id } of copy.nav.items.slice(1)) {
-    await page.evaluate((target) => document.getElementById(target)?.scrollIntoView({ behavior: 'instant' }), id);
-    await expect.poll(() => topOf(page, id)).toBeLessThanOrEqual(2);
+    // Re-issue the jump until it sticks: a late ScrollTrigger refresh or Lenis
+    // frame can land right after a single native jump on a busy machine.
+    await expect
+      .poll(async () => {
+        await page.evaluate((target) => document.getElementById(target)?.scrollIntoView({ behavior: 'instant' }), id);
+        return topOf(page, id);
+      })
+      .toBeLessThanOrEqual(2);
     // Wait for the lazy photos in view to load and the sheet content in view to finish revealing.
     await page.waitForFunction(() => {
       const inView = (el: Element) => {

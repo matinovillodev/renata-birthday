@@ -32,6 +32,11 @@ const FLOAT_RISE = 0.35; // of the viewport height per screen scrolled
 const FLOAT_FADE_START = 0.15; // screens
 const FLOAT_FADE_END = 0.6; // screens
 const STRIP_SHIFT_PERCENT = 30;
+/** Intro forest: slow idle "breathing" zoom, then the camera enters the path on open. */
+const FOREST_IDLE_ZOOM = 1.08;
+const FOREST_IDLE_SECONDS = 12;
+const FOREST_ENTER_ZOOM = 1.35;
+const INTRO_EXIT_SECONDS = 0.9;
 
 export interface Motion {
   /** Plays the curtain entrance (star, eyebrow, name, button). */
@@ -143,8 +148,15 @@ export function initMotion(): Motion {
       gsap.set(heroItems, { opacity: 0, y: RISE_OFFSET_PX });
     }
 
+    let forestIdle: gsap.core.Tween | undefined;
+
     const enterIntro = context.add('enterIntro', (intro: HTMLElement) => {
       const q = gsap.utils.selector(intro);
+      forestIdle = gsap.fromTo(
+        q('[data-intro-camera]'),
+        { scale: 1 },
+        { scale: FOREST_IDLE_ZOOM, duration: FOREST_IDLE_SECONDS, ease: 'sine.inOut', repeat: -1, yoyo: true },
+      );
       gsap.from(q('.intro__star'), { scale: 0, rotation: -200, opacity: 0, duration: 1.2, delay: 0.1, ease: 'back.out(1.6)' });
       gsap.from(q('.intro__eyebrow'), { opacity: 0, y: 8, duration: 0.7, delay: 0.9, ease: 'power1.out' });
       gsap.from(q('.intro__name'), { opacity: 0, y: 16, scale: 0.96, duration: 1.1, delay: 1.05, ease: 'power3.out' });
@@ -162,7 +174,20 @@ export function initMotion(): Motion {
             ease: 'power3.out',
             delay: (index: number) => RISE_DELAYS[index] ?? RISE_DELAYS[RISE_DELAYS.length - 1],
           });
-          gsap.to(intro, { opacity: 0, scale: 1.04, duration: 0.9, ease: 'power2.inOut', onComplete: () => resolve() });
+          // "Enter the forest": the camera dives into the path while the curtain fades.
+          forestIdle?.kill();
+          gsap.to(gsap.utils.selector(intro)('[data-intro-camera]'), {
+            scale: FOREST_ENTER_ZOOM,
+            duration: INTRO_EXIT_SECONDS,
+            ease: 'power2.in',
+          });
+          gsap.to(intro, {
+            opacity: 0,
+            scale: 1.04,
+            duration: INTRO_EXIT_SECONDS,
+            ease: 'power2.inOut',
+            onComplete: () => resolve(),
+          });
         }),
     ) as Motion['openIntro'];
 

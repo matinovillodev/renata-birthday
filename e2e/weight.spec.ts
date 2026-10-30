@@ -11,12 +11,17 @@ import { expect, test } from './fixtures';
  * measured value recorded below.
  */
 /*
- * Measured 2026-10-29: 682,538 B = fonts 310,764 (both Fraunces files and
- * Nunito), AVIF 309,456 (hero 123 KB, plus photo-band thumbnails and the
- * chapter II photo that fall inside Chrome's lazy-load distance), JS 51,996
- * (gzip), HTML 6,752, CSS 3,570. Initial JS gzip from dist: 51,829 B.
+ * The total varies between runs: how many lazy photos (photo-band thumbnails,
+ * chapter II photo) finish before `load` depends on timing. The budget uses the
+ * worst case seen.
+ *
+ * T4 (2026-10-29): 682,538 B (one sample) -> budget 819,046 B.
+ * T7 (2026-10-29, + intro forest background, 69,627 B AVIF at 390x844 @3x):
+ * 566,858 - 753,268 B over 6 runs. Worst case 753,268 B = fonts 310,764,
+ * AVIF 379,083, JS ~52,000 (gzip), HTML ~7,250, CSS ~4,000.
+ * Initial JS gzip from dist: ~52 KB.
  */
-const MEASURED_LOAD_BYTES = 682_538;
+const MEASURED_LOAD_BYTES = 753_268;
 const LOAD_BUDGET_BYTES = Math.round(MEASURED_LOAD_BYTES * 1.2);
 const INITIAL_JS_GZIP_BUDGET = 60 * 1024;
 
