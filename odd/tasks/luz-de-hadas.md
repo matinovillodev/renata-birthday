@@ -59,9 +59,10 @@ The user wants to try a brighter, warmer look built around a new hero photo (bab
 ## Progress and evidence
 
 - 2026-10-30: Worktree and branch created from `fff18b0`. Canvas V4 artboard `Luz.dc.html` published as the visual reference.
-- 2026-10-30: L1 and L2 done by the delegated writer (one work-unit commit each). The L2 commit hash is reported in the handoff (a commit cannot record its own hash).
+- 2026-10-30: L1 and L2 done by the delegated writer (one work-unit commit each). L1 commit `c1ebef3`, L2 commit `0d6f28f`. Parent spot check: `npm test` 58/58; main checkout dirty list unchanged; worktree clean. RDD assess over `fff18b0..0d6f28f` (committed-only, parent-run): medium, `review_due: false` (`under_budget`) — no review started. Diff: 24 files, +697/−201 (over the ~400-line advisory budget; `exception-ok`, local branch only).
+- Beyond the brief: the og:image is now cropped from the new photo. AA-driven design deviations: chapter scrim 0.65 → 0.75, darker intro shade, blurred cream cushion behind the landscape hero copy, text-anchored portrait veil.
 - Known: the hero photo is 1672 px wide and looks soft on DPR ≥ 2 phones (needs a higher-resolution export of the same image); the portrait lift relies on copy-height estimates (`--hero-copy-fixed`), guarded by `e2e/hero.spec.ts` on 11 viewports.
 
 ## Next step
 
-Parent review (screenshots, RDD assess of the L2 commit), then the user decides on merge into the main line.
+User reviews the branch visually (360×640 and 390×844 hero: face sits high because of the lift; intro is darker) and decides whether to merge it into the main line. A higher-resolution export of the photo is pending from the user.
