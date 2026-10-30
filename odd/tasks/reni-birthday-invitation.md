@@ -55,8 +55,9 @@ Branch `feat/intro-renata-fairies` (from `feat/intro-forest-background` 041ae62)
 User change list 2026-10-29 (same branch):
 
 - [x] T10 Remove helper texts: the fairy-dust hint, the RSVP body ("Al tocar el botón…"), the RSVP note ("La asistencia queda confirmada…") and the map caption ("El mapa muestra…") — from the data module, components, tests and README. The page still never claims an RSVP was sent. Route: delegated. Evidence: keys `sprinkleHint`, `map.description`, `rsvp.body`, `rsvp.note` removed with markup/styles; RSVP button 32 px below its title, map 28 px below "Cómo llegar"; honesty e2e still fails on any "confirmado/a"/"enviado/a"; `npm test` 58/58; `npx astro check` 0 errors; build ok; e2e 138 passed / 42 skipped; rg for the four texts in src/dist/README: no matches (parent re-ran on src).
-- [ ] T11 Closing footer spacing: separate "¡Te esperamos!" (italic display, descenders crowd the date at 16 px) from its date/venue subtext and keep date + venue grouped. Route: delegated.
-- [ ] T12 Hero "Confirmar asistencia" must land on the RSVP panel with the WhatsApp button, not on the chapter 4 photo: move the `confirmar` anchor to that panel (side nav, scroll spy and `/#confirmar` deep links follow). Route: delegated.
+- [x] T11 Closing footer spacing: separate "¡Te esperamos!" (italic display, descenders crowd the date at 16 px) from its date/venue subtext and keep date + venue grouped. Route: delegated.
+- [x] T12 Hero "Confirmar asistencia" must land on the RSVP panel with the WhatsApp button, not on the chapter 4 photo: move the `confirmar` anchor to that panel (side nav, scroll spy and `/#confirmar` deep links follow). Route: delegated.
+  T11 + T12 evidence (2026-10-30, verified and committed by another session at the user's request; the writer's work had been left uncommitted since 2026-10-29 22:30): closing title gets `margin-bottom: clamp(22px, 0.32em, 36px)` and date + venue are grouped in `.closing__when`; the `confirmar` id moved from chapter 4 to the RSVP panel. One commit for both because their edits interleave in `RsvpPanel.astro`. Checks: `npm test` 58/58; `npx astro check` 0 errors; `npm run build` ok; `npm run test:e2e` 159 passed / 45 skipped / 0 failed (includes "the hero call to action lands on the WhatsApp button" and "a shared /#confirmar link opens on the WhatsApp button").
 
 ## Acceptance criteria
 
@@ -86,4 +87,4 @@ User change list 2026-10-29 (same branch):
 
 ## Next step
 
-User pushes local `main` to a private GitHub repo and connects it in Netlify. Nothing has been published by the agent.
+2026-10-30: the private repo `origin` exists and the user pushed all branches. Production moved to the "Luz de hadas" line (`feat/luz-de-hadas`, see `odd/tasks/luz-de-hadas.md`), which now includes T11/T12; `main` is fast-forwarded to it. Next: connect the repo in Netlify with `main` as the production branch (T6).

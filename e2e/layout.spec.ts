@@ -38,6 +38,26 @@ test('the date line never leaves the "·" separator at the end of a line', async
   }
 });
 
+test('the closing title keeps clear space above its date-and-venue block', async ({ page }, testInfo) => {
+  const width = testInfo.project.use.viewport?.width;
+  test.skip(width !== 360 && width !== 1440, 'checked at 360 px and 1440 px');
+
+  const { timeLabel } = formatEventDate(event.startsAt, event.timeZone);
+  await page.goto('/#confirmar');
+  await openInvitation(page);
+  const footer = page.locator('footer');
+  await footer.scrollIntoViewIfNeeded();
+  await page.evaluate(() => document.fonts.ready);
+
+  const title = await footer.getByText(copy.closing.heading).boundingBox();
+  const date = await footer.locator('p', { hasText: timeLabel }).boundingBox();
+  const venue = await footer.getByText(event.venue.name, { exact: true }).boundingBox();
+  if (!title || !date || !venue) throw new Error('closing footer is not rendered');
+
+  expect(date.y - (title.y + title.height), 'gap between the title and the date').toBeGreaterThanOrEqual(20);
+  expect(venue.y - (date.y + date.height), 'date and venue read as one block').toBeLessThanOrEqual(12);
+});
+
 test('no horizontal overflow anywhere on the page', async ({ page }) => {
   await page.goto('/');
   await openInvitation(page);

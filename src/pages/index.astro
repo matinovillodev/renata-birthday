@@ -4,7 +4,8 @@
  * Every text and fact comes from src/data/event.ts.
  *
  * Section anchors (side nav targets): #inicio, #invitacion, #el-gran-dia,
- * #como-llegar, #confirmar. Chapters carry `data-chapter` (1-4) for T3.
+ * #como-llegar, #confirmar (the RSVP panel itself, so links land on the
+ * WhatsApp button). Chapters carry `data-chapter` (1-4) for T3.
  */
 import { getImage } from 'astro:assets';
 import heroFairy from '../assets/photos/hero-fairy.jpg';
@@ -79,7 +80,7 @@ const ogImageUrl = new URL(ogImage.src, Astro.site ?? Astro.url).href;
       <EventDetails dayLabel={date.dayLabel} timeLabel={date.timeLabel} />
     </div>
 
-    <div id="confirmar" class="chapter chapter--4" data-chapter="4">
+    <div class="chapter chapter--4" data-chapter="4">
       <ChapterScreen
         photo={closingLandscape}
         alt={copy.chapterRsvp.photoAlt}
