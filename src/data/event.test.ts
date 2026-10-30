@@ -22,6 +22,12 @@ describe('event data', () => {
     expect(event.venue.mapEmbedUrl).toContain(`${lat},${lng}`);
   });
 
+  it('uses the venue confirmed by the family (2026-10-30)', () => {
+    expect(event.venue.name).toBe('Centro de Jubilados 12 de Mayo');
+    expect(event.venue.mapsShareUrl).toBe('https://maps.app.goo.gl/E9QZ5DrBoGMBTAQG8');
+    expect(event.venue.coordinates).toEqual({ lat: -31.352343, lng: -64.1810758 });
+  });
+
   it('has a start date that renders as the V3 day and time labels', () => {
     expect(formatEventDate(event.startsAt, event.timeZone)).toEqual({
       dayLabel: 'Sábado 28 de noviembre',
@@ -31,6 +37,6 @@ describe('event data', () => {
 
   it('derives the visible name-dependent copy from the data fields', () => {
     expect(copy.hero.name).toBe(event.childName);
-    expect(copy.map.iframeTitle).toBe('Mapa de ubicación del Centro Vecinal Jorge Newbery');
+    expect(copy.map.iframeTitle).toBe('Mapa de ubicación del Centro de Jubilados 12 de Mayo');
   });
 });

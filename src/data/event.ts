@@ -58,7 +58,13 @@ export interface EventData {
 }
 
 const childName = 'Renata';
-const venueName = 'Centro Vecinal Jorge Newbery';
+/*
+ * Venue confirmed by the family on 2026-10-30. The share link resolves to the
+ * Google place "Centro de Jubilados y Pensionados 12 de Mayo - Jorge Newbery";
+ * guests read the shorter name below.
+ */
+const venueName = 'Centro de Jubilados 12 de Mayo';
+const venueCoordinates = { lat: -31.352343, lng: -64.1810758 } as const;
 
 export const event: EventData = {
   childName,
@@ -67,9 +73,9 @@ export const event: EventData = {
   timeZone: 'America/Argentina/Cordoba',
   venue: {
     name: venueName,
-    mapsShareUrl: 'https://maps.app.goo.gl/1j1g7EUKBxd6Cs3Q8',
-    coordinates: { lat: -31.3519557, lng: -64.1809048 },
-    mapEmbedUrl: 'https://maps.google.com/maps?q=-31.3519557,-64.1809048&z=16&hl=es&output=embed',
+    mapsShareUrl: 'https://maps.app.goo.gl/E9QZ5DrBoGMBTAQG8',
+    coordinates: venueCoordinates,
+    mapEmbedUrl: `https://maps.google.com/maps?q=${venueCoordinates.lat},${venueCoordinates.lng}&z=16&hl=es&output=embed`,
   },
   whatsapp: {
     display: '+54 9 3517 62-2809',

@@ -28,7 +28,7 @@ test('the WhatsApp link opens the pre-filled message in a new tab', async ({ pag
 test('the map iframe uses the data embed URL, a Spanish title and lazy loading', async ({ page }) => {
   const map = page.locator('#el-gran-dia iframe');
   await expect(map).toHaveAttribute('src', event.venue.mapEmbedUrl);
-  await expect(map).toHaveAttribute('title', 'Mapa de ubicación del Centro Vecinal Jorge Newbery');
+  await expect(map).toHaveAttribute('title', 'Mapa de ubicación del Centro de Jubilados 12 de Mayo');
   await expect(map).toHaveAttribute('loading', 'lazy');
 });
 
