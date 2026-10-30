@@ -1,0 +1,133 @@
+---
+/**
+ * Layer for the fairies that fly out when the invitation opens. It renders
+ * nothing visible: src/scripts/fairies clones the `<template>` fairy three
+ * times, flies the clones and removes them. Decorative (`aria-hidden`), fixed
+ * (no layout shift) and never takes pointer events.
+ *
+ * Original drawing: a small fairy with a pink dress, a gold-tipped wand and
+ * translucent pink wings that flap (CSS, transform only).
+ */
+---
+
+<div class="fairies" data-fairies aria-hidden="true">
+  <template data-fairy-template>
+    <span class="fairy">
+      <svg viewBox="0 0 48 48" width="44" height="44" focusable="false" aria-hidden="true">
+        <g class="fairy__wing fairy__wing--left">
+          <ellipse
+            cx="14"
+            cy="17"
+            rx="10"
+            ry="6.5"
+            transform="rotate(-28 14 17)"
+            fill="#F2C9CF"
+            fill-opacity="0.55"
+            stroke="#D8B76A"
+            stroke-opacity="0.8"
+            stroke-width="0.6"></ellipse>
+          <ellipse
+            cx="16"
+            cy="27"
+            rx="6.5"
+            ry="4"
+            transform="rotate(24 16 27)"
+            fill="#E7B8C0"
+            fill-opacity="0.5"
+            stroke="#D8B76A"
+            stroke-opacity="0.7"
+            stroke-width="0.5"></ellipse>
+        </g>
+        <g class="fairy__wing fairy__wing--right">
+          <ellipse
+            cx="34"
+            cy="17"
+            rx="10"
+            ry="6.5"
+            transform="rotate(28 34 17)"
+            fill="#F2C9CF"
+            fill-opacity="0.55"
+            stroke="#D8B76A"
+            stroke-opacity="0.8"
+            stroke-width="0.6"></ellipse>
+          <ellipse
+            cx="32"
+            cy="27"
+            rx="6.5"
+            ry="4"
+            transform="rotate(-24 32 27)"
+            fill="#E7B8C0"
+            fill-opacity="0.5"
+            stroke="#D8B76A"
+            stroke-opacity="0.7"
+            stroke-width="0.5"></ellipse>
+        </g>
+        <circle cx="24" cy="13.5" r="3.3" fill="#F6F1E7"></circle>
+        <path
+          d="M24 16.5c-1.6 0-2.4 1.2-2.6 2.6L19 31.5c3.2 1.6 6.8 1.6 10 0l-2.4-12.4c-.2-1.4-1-2.6-2.6-2.6z"
+          fill="#E7B8C0"></path>
+        <path d="M21.6 21.5l-4 3.2M26.4 21.5l3.4-3.6M22.5 31.8v3.2M25.5 31.8v3.2" stroke="#F6F1E7" stroke-width="1.1" stroke-linecap="round" fill="none"
+        ></path>
+        <path d="M29.8 17.9l1.6-2.2" stroke="#D8B76A" stroke-width="0.9" stroke-linecap="round"></path>
+        <circle cx="31.8" cy="15.2" r="1.4" fill="#F3DFA6"></circle>
+      </svg>
+    </span>
+  </template>
+</div>
+
+<style>
+  .fairies {
+    position: fixed;
+    inset: 0;
+    z-index: 46; /* above the curtain (40) and the fairy dust (45 while opening) */
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  /* Positioned by GSAP (x/y); the margin centers the fairy on that point. */
+  .fairy {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 44px;
+    height: 44px;
+    margin: -22px 0 0 -22px;
+    filter: drop-shadow(0 0 6px rgb(216 183 106 / 0.85));
+    will-change: transform, opacity;
+  }
+
+  .fairy svg {
+    display: block;
+    overflow: visible;
+  }
+
+  .fairy__wing {
+    transform-box: fill-box;
+    animation: fairy-flap 0.22s ease-in-out infinite alternate;
+  }
+
+  .fairy__wing--left {
+    transform-origin: 100% 50%;
+  }
+
+  .fairy__wing--right {
+    transform-origin: 0% 50%;
+  }
+
+  @keyframes fairy-flap {
+    from {
+      transform: scaleX(1);
+    }
+
+    to {
+      transform: scaleX(0.45);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fairies {
+      display: none;
+    }
+  }
+</style>

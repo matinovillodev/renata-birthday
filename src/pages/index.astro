@@ -11,6 +11,7 @@ import heroLandscape from '../assets/photos/hero-landscape.jpg';
 import ChapterScreen from '../components/ChapterScreen.astro';
 import Closing from '../components/Closing.astro';
 import EventDetails from '../components/EventDetails.astro';
+import Fairies from '../components/Fairies.astro';
 import Hero from '../components/Hero.astro';
 import Intro from '../components/Intro.astro';
 import InvitationPanel from '../components/InvitationPanel.astro';
@@ -96,6 +97,8 @@ const ogImageUrl = new URL(ogImage.src, Astro.site ?? Astro.url).href;
 
   <!-- Fairy-dust particles (tap anywhere) are drawn here by src/scripts/fairy-dust. -->
   <div class="fairy-dust" data-fairy-dust aria-hidden="true"></div>
+  <!-- Fairies that fly out when the invitation opens (src/scripts/fairies). -->
+  <Fairies />
 </Base>
 
 <script>

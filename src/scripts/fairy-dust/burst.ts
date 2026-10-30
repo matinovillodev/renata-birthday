@@ -74,6 +74,26 @@ export function buildBurst(scale = 1): BurstParticle[] {
   }));
 }
 
+const TRAIL_COLORS = [GOLD, LIGHT_GOLD, PINK];
+
+/**
+ * One tiny sparkle dropped behind a flying fairy: it drifts down a little and
+ * fades in ~0.7 s. `random` returns values in [0, 1) (Math.random by default).
+ */
+export function buildTrail(random: () => number = Math.random): BurstParticle[] {
+  return [
+    {
+      shape: 'sparkle',
+      color: TRAIL_COLORS[Math.floor(random() * TRAIL_COLORS.length)],
+      radius: 2 + random() * 1.8,
+      direction: 70 + random() * 40,
+      distance: 10 + random() * 10,
+      life: 0.6 + random() * 0.25,
+      spin: 30,
+    },
+  ];
+}
+
 /** tsParticles v4 override options for one particle of a burst. */
 export function toParticleOptions(particle: BurstParticle) {
   const decay = particle.shape === 'sparkle' ? SPARKLE_DECAY : BUTTERFLY_DECAY;

@@ -5,21 +5,30 @@
  * pointer events, so links and buttons keep working.
  */
 import type { MotionGate } from '../motion-gate';
+import { buildTrail } from './burst';
 import type { FairyDust } from './engine';
 
 export interface FairyDustController {
   /** Bursts at viewport coordinates (CSS px); no-op under reduced motion. */
   burst(x: number, y: number, scale?: number): void;
+  /**
+   * Drops one tiny sparkle (a flying fairy's trail); no-op under reduced
+   * motion or before the engine has loaded. Optional so that lightweight
+   * stand-ins (no overlay on the page) can omit it.
+   */
+  trail?(x: number, y: number): void;
   /** Starts loading the particle engine in the background. */
   prefetch(): void;
 }
 
 export function initFairyDust(overlay: HTMLElement, gate: MotionGate): FairyDustController {
   let dust: Promise<FairyDust> | undefined;
+  let ready: FairyDust | undefined; // set once loaded, so trails never trigger a load
 
   const load = () => {
     dust ??= import('./engine')
       .then(({ createFairyDust }) => createFairyDust(overlay))
+      .then((instance) => (ready = instance))
       .catch((error: unknown) => {
         dust = undefined; // let a later tap retry
         throw error;
@@ -49,11 +58,16 @@ export function initFairyDust(overlay: HTMLElement, gate: MotionGate): FairyDust
     if (allowed || !dust) return;
     const current = dust;
     dust = undefined;
+    ready = undefined;
     current.then((instance) => instance.destroy()).catch(() => {});
   });
 
   return {
     burst,
+    trail(x, y) {
+      if (!gate.allowed || !ready) return;
+      ready.emit(x, y, buildTrail());
+    },
     prefetch() {
       if (!gate.allowed) return;
       const start = () => void load().catch(() => {});

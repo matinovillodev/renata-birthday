@@ -9,7 +9,7 @@ import { loadOpacityUpdater } from '@tsparticles/updater-opacity';
 import { loadPaintUpdater } from '@tsparticles/updater-paint';
 import { loadRotateUpdater } from '@tsparticles/updater-rotate';
 import { loadSizeUpdater } from '@tsparticles/updater-size';
-import { buildBurst, containerOptions, toParticleOptions } from './burst';
+import { buildBurst, containerOptions, toParticleOptions, type BurstParticle } from './burst';
 import { loadFairyShapes } from './shapes';
 
 /** Longest particle life (1.6 s) plus a margin: then the canvas loop can sleep. */
@@ -18,6 +18,8 @@ const IDLE_PAUSE_MS = 1800;
 export interface FairyDust {
   /** Bursts at viewport coordinates (CSS px). */
   burst(x: number, y: number, scale?: number): void;
+  /** Adds the given particles at viewport coordinates (CSS px), e.g. a fairy's trail. */
+  emit(x: number, y: number, particles: readonly BurstParticle[]): void;
   destroy(): void;
 }
 
@@ -45,17 +47,22 @@ export async function createFairyDust(element: HTMLElement): Promise<FairyDust> 
 
   let idleTimer: ReturnType<typeof setTimeout> | undefined;
 
+  const emit = (x: number, y: number, particles: readonly BurstParticle[]) => {
+    // Particle positions are canvas pixels (CSS px times the pixel ratio).
+    const ratio = container.retina.pixelRatio;
+    container.play();
+    for (const particle of particles) {
+      container.particles.addParticle({ x: x * ratio, y: y * ratio }, toParticleOptions(particle) as never);
+    }
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => container.pause(), IDLE_PAUSE_MS);
+  };
+
   return {
     burst(x, y, scale = 1) {
-      // Particle positions are canvas pixels (CSS px times the pixel ratio).
-      const ratio = container.retina.pixelRatio;
-      container.play();
-      for (const particle of buildBurst(scale)) {
-        container.particles.addParticle({ x: x * ratio, y: y * ratio }, toParticleOptions(particle) as never);
-      }
-      clearTimeout(idleTimer);
-      idleTimer = setTimeout(() => container.pause(), IDLE_PAUSE_MS);
+      emit(x, y, buildBurst(scale));
     },
+    emit,
     destroy() {
       clearTimeout(idleTimer);
       container.destroy();

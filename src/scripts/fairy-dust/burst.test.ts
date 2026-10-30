@@ -1,7 +1,36 @@
 import { describe, expect, it } from 'vitest';
-import { buildBurst, containerOptions, MAX_PARTICLES, toParticleOptions } from './burst';
+import { buildBurst, buildTrail, containerOptions, MAX_PARTICLES, toParticleOptions } from './burst';
 
 const V3_COLORS = ['#D8B76A', '#F3DFA6', '#E7B8C0'];
+
+describe('buildTrail', () => {
+  const sequence = (values: number[]) => {
+    let index = 0;
+    return () => values[index++ % values.length];
+  };
+
+  it('drops one tiny V3 sparkle that drifts down and fades quickly', () => {
+    const trail = buildTrail(sequence([0.5]));
+    expect(trail).toHaveLength(1);
+    const [sparkle] = trail;
+    expect(sparkle.shape).toBe('sparkle');
+    expect(V3_COLORS).toContain(sparkle.color);
+    expect(sparkle.radius).toBeLessThanOrEqual(4);
+    expect(sparkle.life).toBeGreaterThanOrEqual(0.5);
+    expect(sparkle.life).toBeLessThanOrEqual(0.9);
+    // Canvas angles: 90 is straight down; the drift stays roughly downwards.
+    expect(sparkle.direction).toBeGreaterThan(45);
+    expect(sparkle.direction).toBeLessThan(135);
+  });
+
+  it('varies color, size and drift with the random source', () => {
+    const low = buildTrail(sequence([0]))[0];
+    const high = buildTrail(sequence([0.99]))[0];
+    expect(low.color).not.toBe(high.color);
+    expect(low.radius).not.toBe(high.radius);
+    expect(low.direction).not.toBe(high.direction);
+  });
+});
 
 describe('buildBurst', () => {
   it('makes eight sparkles and two butterflies, like the V3 burst', () => {
