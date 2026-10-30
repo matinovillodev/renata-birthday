@@ -75,7 +75,6 @@ const items = [
   </div>
 
   <h3 id="como-llegar" class="display details__map-title">{copy.map.heading}</h3>
-  <p class="details__map-text">{copy.map.description}</p>
   <div class="details__map">
     <iframe
       src={event.venue.mapEmbedUrl}
@@ -155,15 +154,10 @@ const items = [
     color: var(--color-green);
   }
 
-  .details__map-text {
-    max-width: 32ch;
-    margin: 10px auto 0;
-  }
-
-  /* Full-bleed: cancel the sheet's side gutter. */
+  /* Full-bleed: cancel the sheet's side gutter. Same gap as divider -> heading. */
   .details__map {
     height: 420px;
-    margin: 32px calc(-1 * var(--gutter)) 0;
+    margin: 28px calc(-1 * var(--gutter)) 0;
     background: var(--color-map-placeholder);
   }
 

@@ -1,8 +1,8 @@
 ---
 /**
  * RSVP sheet: opens WhatsApp with a pre-filled message. The page never says
- * the RSVP was sent; the note explains that sending it in WhatsApp confirms.
- * The default slot renders after the note (the closing footer).
+ * the RSVP was sent. The default slot renders after the button (the closing
+ * footer).
  */
 import { copy } from '../data/event';
 import StarIcon from './StarIcon.astro';
@@ -22,7 +22,6 @@ const { whatsappUrl } = Astro.props;
     <StarIcon size={12} color="var(--color-gold-deep)" />
   </div>
   <h2 id="rsvp-title" class="display sheet__title rsvp__title">{copy.rsvp.heading}</h2>
-  <p class="rsvp__body">{copy.rsvp.body}</p>
   <a class="btn rsvp__whatsapp" href={whatsappUrl} target="_blank" rel="noopener" data-rsvp-link>
     <svg
       viewBox="0 0 24 24"
@@ -38,7 +37,6 @@ const { whatsappUrl } = Astro.props;
     >
     {copy.rsvp.button}
   </a>
-  <p class="rsvp__note">{copy.rsvp.note}</p>
   <slot />
 </section>
 
@@ -54,15 +52,8 @@ const { whatsappUrl } = Astro.props;
     margin-top: 16px;
   }
 
-  .rsvp__body {
-    max-width: 34ch;
-    margin: 18px auto 0;
-    font-size: 19px;
-    line-height: 1.7;
-  }
-
   .rsvp__whatsapp {
-    margin-top: 28px;
+    margin-top: 32px;
     padding: 0 30px;
     background: var(--color-green);
     color: var(--color-white);
@@ -71,12 +62,5 @@ const { whatsappUrl } = Astro.props;
 
   .rsvp__whatsapp:hover {
     color: var(--color-white);
-  }
-
-  .rsvp__note {
-    max-width: 36ch;
-    margin: 18px auto 0;
-    font-size: 15px;
-    color: var(--color-ink-muted);
   }
 </style>

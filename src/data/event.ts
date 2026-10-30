@@ -126,7 +126,6 @@ export const copy = {
   invitation: {
     heading: 'Un año lleno de magia',
     body: `${childName} está por cumplir su primer añito y queremos celebrarlo rodeados de las personas que la acompañan con tanto cariño. ¡Nos encantaría que seas parte de este día tan especial!`,
-    sprinkleHint: 'Un toque en cualquier parte… y aparece polvo de hadas',
   },
 
   /** Chapter II photo title. */
@@ -144,10 +143,9 @@ export const copy = {
     placeLabel: 'Lugar',
   },
 
-  /** "How to get there" block above the embedded map. */
+  /** "How to get there" heading above the embedded map. */
   map: {
     heading: 'Cómo llegar',
-    description: `El mapa muestra la ubicación exacta del ${venueName}.`,
     /** Accessible name of the map iframe (not visible; not in V3, which only had a mock map). */
     iframeTitle: `Mapa de ubicación del ${venueName}`,
   },
@@ -163,9 +161,7 @@ export const copy = {
   rsvp: {
     // REGISTER: voseo imperative ("Confirmá"), kept verbatim from V3.
     heading: 'Confirmá tu asistencia',
-    body: 'Al tocar el botón se abre WhatsApp con un mensaje listo. Solo falta completar el nombre y la cantidad de personas, y enviarlo.',
     button: 'Confirmar por WhatsApp',
-    note: 'La asistencia queda confirmada cuando el mensaje se envía desde WhatsApp.',
   },
 
   /** Closing footer; the date line and venue below it come from `event`. */

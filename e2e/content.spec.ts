@@ -40,8 +40,7 @@ test('after opening WhatsApp, no visible text claims the RSVP was confirmed or s
   expect(popup.url()).toContain('https://wa.me/5493517622809');
   await popup.close();
 
-  // The static note explains that sending the message is what confirms.
-  await expect(page.getByText(copy.rsvp.note)).toBeVisible();
-  const visibleText = (await page.locator('body').innerText()).replace(copy.rsvp.note, '');
+  await expect(link).toBeVisible();
+  const visibleText = await page.locator('body').innerText();
   expect(visibleText).not.toMatch(/confirmad[oa]|enviad[oa]/i);
 });

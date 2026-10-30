@@ -31,7 +31,6 @@ describe('event data', () => {
 
   it('derives the visible name-dependent copy from the data fields', () => {
     expect(copy.hero.name).toBe(event.childName);
-    expect(copy.map.description).toContain(event.venue.name);
     expect(copy.map.iframeTitle).toBe('Mapa de ubicación del Centro Vecinal Jorge Newbery');
   });
 });

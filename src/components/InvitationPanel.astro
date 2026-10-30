@@ -1,7 +1,6 @@
 ---
 /** #invitacion: ivory sheet with the invitation text, sliding over the hero. */
 import { copy } from '../data/event';
-import StarIcon from './StarIcon.astro';
 ---
 
 <section id="invitacion" class="sheet sheet--ivory invitation" aria-labelledby="invitacion-title">
@@ -23,10 +22,6 @@ import StarIcon from './StarIcon.astro';
   </svg>
   <h2 id="invitacion-title" class="display sheet__title invitation__title">{copy.invitation.heading}</h2>
   <p class="invitation__body">{copy.invitation.body}</p>
-  <p class="invitation__hint" data-fairy-dust-hint>
-    <StarIcon size={14} color="var(--color-gold-deep)" />
-    {copy.invitation.sprinkleHint}
-  </p>
 </section>
 
 <style>
@@ -49,24 +44,5 @@ import StarIcon from './StarIcon.astro';
     margin: 24px auto 0;
     font-size: 20px;
     line-height: 1.7;
-  }
-
-  /*
-   * The hint promises fairy dust on tap, which only exists once the motion
-   * script runs (data-motion="ready") and motion is allowed.
-   */
-  .invitation__hint {
-    display: none;
-    align-items: center;
-    gap: 8px;
-    margin-top: 28px;
-    font-size: 14px;
-    color: var(--color-ink-muted);
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    :global(html[data-motion='ready']) .invitation__hint {
-      display: inline-flex;
-    }
   }
 </style>
