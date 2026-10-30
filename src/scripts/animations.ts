@@ -23,8 +23,11 @@ const RISE_OFFSET_PX = 22;
 const PHOTO_SHIFT_PERCENT = 18;
 const PHOTO_ZOOM = 1.14;
 /**
- * Softer hero zoom on landscape screens (user decision): at 1.14 the zoom
- * clips Renata's headband on 16:10 and 4:3 screens.
+ * Softer hero zoom on landscape screens (user decision, T3b). It was needed
+ * because 1.14 clipped the headband of the earlier hero photo; the "Luz de
+ * hadas" photo has headroom at either zoom, and the subtler landscape motion
+ * is kept as approved. Portrait keeps V3's 1.14 (Hero.astro lifts the photo
+ * so the zoomed face stays clear of the copy).
  */
 const HERO_WIDE_ZOOM = 1.06;
 const PHOTO_ZOOM_SCREENS = 1.2;

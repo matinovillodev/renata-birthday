@@ -1,7 +1,12 @@
 ---
 /**
- * Chapter I hero (#inicio screen): full-bleed photo of Renata with the
- * invitation headline at the bottom.
+ * Chapter I hero (#inicio screen): full-bleed "Luz de hadas" photo of Renata
+ * (src/assets/photos/hero-fairy.jpg, 1672x941) with the invitation headline.
+ *
+ * Composition (V4 artboard "Luz de hadas"): the photo is bright, so the copy
+ * is dark. Portrait screens (< 4/3) frame the baby on the left (20% 40%) and
+ * keep the copy at the bottom over a cream veil; landscape screens (>= 4/3)
+ * frame her at 30% 50% and center the copy in the right half, over the haze.
  *
  * T3 hooks: `data-parallax="photo"` on the picture, `data-twinkle` stars,
  * `data-rise` on the text stack (V3 staggers its children in after the intro).
@@ -11,8 +16,7 @@
  * downloads the photo once.
  */
 import type { ComponentProps } from 'astro/types';
-import heroLandscape from '../assets/photos/hero-landscape.jpg';
-import heroPortrait from '../assets/photos/hero-portrait.jpg';
+import heroFairy from '../assets/photos/hero-fairy.jpg';
 import { copy } from '../data/event';
 import type { EventDateLabels } from '../lib/event-date';
 import ArtDirectedPhoto from './ArtDirectedPhoto.astro';
@@ -31,50 +35,38 @@ type Props =
 const props = Astro.props;
 
 /*
- * The hero renditions drop the top of each photo (background only) so that
- * Renata's face sits higher on screen and the text below never covers it.
- * Landscape: 0.14 together with the softer 1.06 zoom (animations.ts) and the
- * 18svh name cap below keeps the headband ~40px from the top and the chin
- * above the text on 1440x900, 1280x800 and 1024x768.
+ * Single source of the hero photo renditions (hero and intro curtain). The
+ * master is only 1672 px wide: never cropped at build time, never upscaled
+ * (ArtDirectedPhoto caps the widths), and the same files serve both
+ * orientations. Cover-fit, the photo is drawn max(100vw, 1.78 x screen
+ * height) wide, the screen being at most 1100 px tall.
  */
-const PORTRAIT_TOP_CROP = 0.12;
-const LANDSCAPE_TOP_CROP = 0.14;
-
-/** Single source of the hero photo renditions (hero and intro curtain). */
+const sharedRenditions = {
+  src: heroFairy,
+  widths: [640, 960, 1280, 1672],
+  sizes: 'max(100vw, min(178vh, 1955px))',
+};
 const photo: Pick<ComponentProps<typeof ArtDirectedPhoto>, 'switchAt' | 'narrow' | 'wide'> = {
   switchAt: '4/3',
-  narrow: {
-    src: heroPortrait,
-    aspectRatio: heroPortrait.width / (heroPortrait.height * (1 - PORTRAIT_TOP_CROP)),
-    cropPosition: 'bottom',
-    widths: [640, 828, 1080, 1290, 1602],
-    sizes: 'max(100vw, min(76vh, 836px))',
-    objectPosition: '50% 30%',
-  },
-  wide: {
-    src: heroLandscape,
-    aspectRatio: heroLandscape.width / (heroLandscape.height * (1 - LANDSCAPE_TOP_CROP)),
-    cropPosition: 'bottom',
-    widths: [960, 1280, 1600, 1920, 2400],
-    sizes: 'max(100vw, min(176vh, 1938px))',
-    objectPosition: '50% 30%',
-  },
+  narrow: { ...sharedRenditions, objectPosition: '20% 40%' },
+  wide: { ...sharedRenditions, objectPosition: '30% 50%' },
 };
 
+/** Twinkle positions away from the face: `tall` on portrait screens, `wide` (V4) on landscape. */
 const twinkles = [
-  { left: '12%', top: '16%', size: 18, delay: '-0.4s' },
-  { left: '80%', top: '12%', size: 14, delay: '-1.1s' },
-  { left: '70%', top: '32%', size: 20, delay: '-1.9s' },
-  { left: '20%', top: '40%', size: 12, delay: '-2.6s' },
+  { tall: ['8%', '6%'], wide: ['62%', '16%'], size: 18, delay: '-0.4s' },
+  { tall: ['88%', '8%'], wide: ['86%', '12%'], size: 14, delay: '-1.1s' },
+  { tall: ['90%', '30%'], wide: ['76%', '30%'], size: 20, delay: '-1.9s' },
+  { tall: ['70%', '3%'], wide: ['10%', '14%'], size: 12, delay: '-2.6s' },
 ];
 ---
 
 {
   props.photoOnly ? (
-    <ArtDirectedPhoto {...photo} priority alt="" data-hero-copy="" />
+    <ArtDirectedPhoto {...photo} class="hero-photo" priority alt="" data-hero-copy="" />
   ) : (
 <PhotoScreen variant="hero">
-  <ArtDirectedPhoto slot="photo" {...photo} priority alt={copy.hero.photoAlt} data-parallax="photo" />
+  <ArtDirectedPhoto slot="photo" {...photo} class="hero-photo" priority alt={copy.hero.photoAlt} data-parallax="photo" />
 
   <Fragment slot="decor">
     {
@@ -82,7 +74,7 @@ const twinkles = [
         <span
           class="twinkle"
           data-twinkle
-          style={`left: ${star.left}; top: ${star.top}; --twinkle-delay: ${star.delay}`}
+          style={`--tall-left: ${star.tall[0]}; --tall-top: ${star.tall[1]}; --wide-left: ${star.wide[0]}; --wide-top: ${star.wide[1]}; --twinkle-delay: ${star.delay}`}
           aria-hidden="true"
         >
           <StarIcon size={star.size} color="var(--color-gold-light)" />
@@ -95,7 +87,7 @@ const twinkles = [
     <p class="eyebrow hero__eyebrow">{copy.hero.eyebrow}</p>
     <h1 class="display hero__name" tabindex="-1">{copy.hero.name}</h1>
     <p class="hero__date"><DateLine date={props.date} /></p>
-    <a class="btn btn--light hero__cta" href="#confirmar">{copy.hero.rsvpButton}</a>
+    <a class="btn btn--accent hero__cta" href="#confirmar">{copy.hero.rsvpButton}</a>
     <p class="hero__hint">
       <svg
         viewBox="0 0 24 24"
@@ -117,11 +109,92 @@ const twinkles = [
 }
 
 <style>
+  /*
+   * Hero metrics shared by the copy and by both hero photos (the hero and the
+   * intro's blurred copy, which must stay aligned).
+   *
+   * Portrait screens show the photo's full height, so the face (headband at
+   * 23.5%, chin at 56% of the photo height) takes a third of the screen, and
+   * on phones the copy stack is taller than the 44% left below the chin. The
+   * photo is lifted by the overlap: the room the copy needs (its fixed parts,
+   * the bottom padding and a clearance, plus the name) minus the 44% of the
+   * screen below the chin, capped to keep the headband on screen. The strip
+   * it leaves at the bottom is covered by the solid end of the cream veil
+   * (PhotoScreen.astro). e2e/hero.spec.ts checks the result on real layouts.
+   */
+  :global(:root) {
+    --hero-name-size: clamp(88px, 24vw, 200px);
+    /*
+     * Eyebrow, date and hint on two lines each (phones), gaps, button, 72px
+     * padding and a 40px clearance, where the veil's fade starts.
+     */
+    --hero-copy-fixed: 401px;
+    --hero-chin: 0.56;
+    /* Capped so the headband stays >= 8px below the top under the 1.14 zoom (headband at 23.5%). */
+    --hero-lift: clamp(
+      0px,
+      var(--hero-copy-fixed) + 0.9 * var(--hero-name-size) - (1 - var(--hero-chin)) * var(--screen-height),
+      0.17 * var(--screen-height) - 8px
+    );
+  }
+
+  @supports (height: 100svh) {
+    :global(:root) {
+      --hero-name-size: clamp(64px, min(max(88px, 24vw), 20svh), 200px);
+    }
+  }
+
+  /* Wider portrait screens: the eyebrow, date and hint fit on one line. */
+  @media (min-width: 600px) {
+    :global(:root) {
+      --hero-copy-fixed: 325px;
+    }
+  }
+
+  /*
+   * Short phones (e.g. 360x640): a tighter stack, a smaller name and a 16px
+   * clearance keep the lift small enough for the headband to stay on screen
+   * under the 1.14 zoom.
+   */
+  @media (max-aspect-ratio: 4/3) and (max-height: 700px) {
+    :global(:root) {
+      --hero-copy-fixed: 297px;
+      --hero-name-size: clamp(64px, 12.5vh, 88px);
+    }
+
+    @supports (height: 100svh) {
+      :global(:root) {
+        --hero-name-size: clamp(64px, 12.5svh, 88px);
+      }
+    }
+  }
+
+  @media (min-aspect-ratio: 4/3) {
+    :global(:root) {
+      --hero-name-size: clamp(72px, 9vw, 160px);
+      --hero-lift: 0px;
+    }
+  }
+
+  /* The lift moves the image inside the picture, so the parallax transforms on the picture are untouched. */
+  :global(picture.hero-photo img) {
+    transform: translateY(calc(-1 * var(--hero-lift)));
+  }
+
   .twinkle {
     position: absolute;
+    top: var(--tall-top);
+    left: var(--tall-left);
     display: block;
     filter: drop-shadow(0 0 6px rgb(255 236 180 / 0.9));
     pointer-events: none;
+  }
+
+  @media (min-aspect-ratio: 4/3) {
+    .twinkle {
+      top: var(--wide-top);
+      left: var(--wide-left);
+    }
   }
 
   /* V3 twinkle (CSS only, so it needs no script and honors reduced motion). */
@@ -154,36 +227,46 @@ const twinkles = [
     margin: 0 auto;
   }
 
+  /*
+   * Landscape: a soft cream cushion right behind the copy (on top of the
+   * screen-wide halo), so the small eyebrow and hint keep AA contrast over
+   * the flowers and bokeh at any landscape size, rotated phones included.
+   */
+  @media (min-aspect-ratio: 4/3) {
+    .hero {
+      position: relative;
+    }
+
+    /* Blurred, so it has no visible edge; it reaches ~0.8 alpha under the outermost text lines. */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: -40px -48px;
+      z-index: -1;
+      border-radius: 64px;
+      background: rgb(var(--tint-cream) / var(--halo-copy-alpha));
+      filter: blur(32px);
+      pointer-events: none;
+    }
+  }
+
   .hero__eyebrow {
-    color: var(--color-gold-light);
+    color: var(--color-caramel);
   }
 
   .hero__name {
-    font-size: clamp(88px, 24vw, 200px);
+    font-size: var(--hero-name-size);
     font-style: italic;
     line-height: 0.9;
     letter-spacing: -0.01em;
-    color: var(--color-pink-light);
-  }
-
-  /* Cap the name by the screen height so the text stack stays below the face. */
-  @supports (height: 100svh) {
-    .hero__name {
-      font-size: clamp(64px, min(max(88px, 24vw), 20svh), 200px);
-    }
-
-    /* Landscape shows more of the photo above the face (smaller top crop). */
-    @media (min-aspect-ratio: 4/3) {
-      .hero__name {
-        font-size: clamp(64px, min(max(88px, 24vw), 18svh), 200px);
-      }
-    }
+    color: var(--color-accent);
   }
 
   .hero__date {
     margin-top: 6px;
     font-size: 20px;
     font-weight: 600;
+    color: var(--color-cocoa);
   }
 
   .hero__cta {
@@ -198,6 +281,7 @@ const twinkles = [
     letter-spacing: 0.14em;
     text-transform: uppercase;
     text-wrap: balance;
+    color: var(--color-cocoa-muted);
   }
 
   .hero__hint svg {
@@ -206,13 +290,22 @@ const twinkles = [
     vertical-align: -3px;
   }
 
+  /* Keep in sync with --hero-copy-fixed for short screens above. */
   @media (max-aspect-ratio: 4/3) and (max-height: 700px) {
     .hero {
       gap: 8px;
     }
 
+    .hero__date {
+      margin-top: 2px;
+    }
+
+    .hero__cta {
+      margin-top: 6px;
+    }
+
     .hero__hint {
-      margin-top: 10px;
+      margin-top: 6px;
     }
   }
 </style>

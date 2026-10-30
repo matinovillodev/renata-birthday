@@ -10,7 +10,7 @@
  * text block (V3 moves it up and fades it while scrolling).
  */
 interface Props {
-  /** `hero` uses V3's hero gradient and spacing; `chapter` the chapter ones. */
+  /** `hero`: dark copy over a cream veil or halo (bright photo); `chapter`: V3's dark gradient and spacing. */
   variant: 'hero' | 'chapter';
 }
 
@@ -41,16 +41,6 @@ const { variant } = Astro.props;
     position: absolute;
     inset: 0;
     pointer-events: none;
-  }
-
-  .screen--hero .screen__shade {
-    background: linear-gradient(
-      180deg,
-      rgb(var(--tint-forest) / 0.25) 0%,
-      rgb(var(--tint-forest) / 0) 30%,
-      rgb(var(--tint-forest) / 0.1) 50%,
-      rgb(var(--tint-forest) / 0.78) 100%
-    );
   }
 
   .screen--chapter .screen__shade {
@@ -86,17 +76,68 @@ const { variant } = Astro.props;
     pointer-events: none;
   }
 
+  /*
+   * Hero ("Luz de hadas" photo, bright): dark copy. Portrait screens keep it
+   * at the bottom over a cream veil anchored to the text, so the veil never
+   * washes over Renata's face; the photo is lifted above it (Hero.astro).
+   * The veil turns solid where the lifted photo ends (`--hero-lift`).
+   */
+  .screen--hero {
+    background: var(--color-cream);
+    color: var(--color-cocoa);
+  }
+
   .screen--hero .screen__copy {
     padding-bottom: 72px;
+    text-shadow: none;
+  }
+
+  /* Eased fade: it stays faint over the chin (just above the text) and firms up behind the eyebrow. */
+  .screen--hero .screen__copy::before {
+    inset: calc(-1 * var(--veil-fade)) 0 0;
+    background: linear-gradient(
+      180deg,
+      rgb(var(--tint-cream) / 0) 0,
+      rgb(var(--tint-cream) / 0.12) calc(var(--veil-fade) * 0.45),
+      rgb(var(--tint-cream) / 0.45) calc(var(--veil-fade) * 0.75),
+      rgb(var(--tint-cream) / var(--veil-alpha)) var(--veil-fade),
+      rgb(var(--tint-cream) / var(--veil-alpha-bottom)) calc(100% - var(--hero-lift, 0px) - 24px),
+      rgb(var(--tint-cream) / 1) calc(100% - var(--hero-lift, 0px))
+    );
+  }
+
+  @media (max-aspect-ratio: 4/3) and (max-height: 700px) {
+    .screen--hero .screen__copy {
+      padding-bottom: 28px;
+    }
   }
 
   /*
-   * Keep the hero text below Renata's face where the screen is short
-   * relative to the photo: landscape screens and short portrait phones.
+   * Landscape: the copy sits centered in the right half, over the photo's
+   * clear haze, with a soft cream halo behind it instead of the veil.
    */
-  @media (min-aspect-ratio: 4/3), (max-height: 700px) {
+  @media (min-aspect-ratio: 4/3) {
+    .screen--hero .screen__shade {
+      background: radial-gradient(
+        ellipse 40% 60% at 74% 50%,
+        rgb(var(--tint-cream) / var(--halo-alpha)) 0%,
+        rgb(var(--tint-cream) / calc(var(--halo-alpha) * 0.45)) 55%,
+        rgb(var(--tint-cream) / 0) 100%
+      );
+    }
+
     .screen--hero .screen__copy {
-      padding-bottom: 40px;
+      top: 0;
+      right: 3%;
+      left: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 0;
+    }
+
+    .screen--hero .screen__copy::before {
+      content: none;
     }
   }
 </style>

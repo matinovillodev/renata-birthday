@@ -143,6 +143,18 @@ html.lenis {
   color: var(--color-forest);
 }
 
+/* Deep rose pill (hero call to action over the bright photo). */
+.btn--accent {
+  background: var(--color-accent);
+  color: var(--color-white);
+  box-shadow: 0 10px 24px rgb(var(--tint-accent) / 0.3);
+}
+
+.btn--accent:hover {
+  background: var(--color-accent-hover);
+  color: var(--color-white);
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;

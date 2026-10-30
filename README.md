@@ -56,8 +56,9 @@ Replace the files **keeping their names**:
 
 | File | Used for |
 | --- | --- |
-| `hero-portrait.jpg` | Hero on phones and portrait screens (also blurred behind the "Abrir invitación" curtain); photo band. |
-| `hero-landscape.jpg` | Hero on landscape screens (also blurred behind the curtain); link preview image; photo band. |
+| `hero-fairy.jpg` | Hero ("Luz de hadas") on every screen, also blurred behind the "Abrir invitación" curtain; link preview image. |
+| `hero-portrait.jpg` | Photo band. |
+| `hero-landscape.jpg` | Photo band. |
 | `band-landscape.jpg` | Chapter "El gran día"; photo band. |
 | `closing-landscape.jpg` | Chapter "¿Nos acompañan?"; photo band. |
 
@@ -65,11 +66,22 @@ Each file must be a JPEG in **sRGB**, at most **2400 px** on the long edge, with
 **no EXIF** (location and camera data). Astro generates the small AVIF/WebP
 versions at build time. Never upscale a photo: the build only scales down.
 
-New photos frame faces differently. Check the screenshots described under
-[Checks](#checks) and, if needed, adjust:
+The hero photo is only **1672×941 px**, so phones with sharp screens (2x/3x)
+show it slightly soft: a portrait phone draws it ~1500 px wide on screen and
+would need ~4500 px. A higher-resolution export of the same image can replace
+it as is (same name, same framing). Its composition is tuned to this photo:
 
-- the hero top crops (`PORTRAIT_TOP_CROP`, `LANDSCAPE_TOP_CROP`) in `src/components/Hero.astro`;
-- the chapter focal points (`focus`, `narrowFocus`) in `src/pages/index.astro`.
+- the face box in `e2e/hero.spec.ts` (headband to chin, cheek to cheek, as
+  fractions of the photo) and the chin line `--hero-chin` in
+  `src/components/Hero.astro`;
+- the framing (`objectPosition`) and the portrait lift (`--hero-copy-fixed`,
+  `--hero-lift`), which raises the photo just enough for the copy at the bottom
+  never to cover the face.
+
+New photos frame faces differently. Check the screenshots described under
+[Checks](#checks) and run `npx playwright test e2e/hero.spec.ts`; if needed,
+adjust the values above or the chapter focal points (`focus`, `narrowFocus`)
+in `src/pages/index.astro`.
 
 ## Checks
 
@@ -78,7 +90,7 @@ New photos frame faces differently. Check the screenshots described under
 | `npm test` | Unit tests (Vitest): data consistency, date labels, WhatsApp link, motion helpers. |
 | `npm run check` | Astro and TypeScript type checks. |
 | `npm run build` | Production build into `dist/`. |
-| `npm run test:e2e` | Playwright on phone, tablet and desktop, with and without reduced motion: intro, links, map, RSVP honesty, accessibility (axe), page weight. |
+| `npm run test:e2e` | Playwright on phone, tablet and desktop, with and without reduced motion: intro, links, map, RSVP honesty, accessibility (axe), page weight, hero face clearance and image width. |
 
 `npm run test:e2e` builds and serves the site itself and uses the installed
 Google Chrome. Without it: `npx playwright install chromium`, then run with

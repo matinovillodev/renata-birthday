@@ -21,8 +21,18 @@
   --color-gold-light: #f3dfa6;
   --color-map-placeholder: #dcd2be;
   --color-white: #fff;
+  /* "Luz de hadas" hero (bright photo): dark copy over a cream veil. */
+  --color-cream: #fcf4ea;
+  --color-cocoa: #4e3423;
+  --color-cocoa-muted: #75594a;
+  --color-caramel: #8a5a2e;
+  --color-accent: #9a4a57;
+  --color-accent-hover: #7a3844;
   /* Dark tint used by photo overlays and shadows, as "R G B" for rgb(... / alpha). */
   --tint-forest: 20 28 22;
+  /* Cream veil over the bright hero photo, as "R G B". */
+  --tint-cream: 252 244 234;
+  --tint-accent: 154 74 87;
 
   /* Typography */
   --font-size-body: 18px;
@@ -52,6 +62,15 @@
    */
   --scrim-alpha: 0.65;
   --scrim-fade: 96px;
+  /*
+   * Hero over the bright "Luz de hadas" photo (V4 artboard): cream veil
+   * behind the portrait copy, cream halo behind the landscape copy.
+   */
+  --veil-alpha: 0.86;
+  --veil-alpha-bottom: 0.94;
+  --veil-fade: 80px;
+  --halo-alpha: 0.6;
+  --halo-copy-alpha: 0.9;
 
   /* Two-tone focus ring: visible on ivory/sand panels and on dark photos. */
   --focus-inner: var(--color-gold-light);
