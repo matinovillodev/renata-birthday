@@ -67,6 +67,13 @@ Each file must be a JPEG in **sRGB**, at most **2400 px** on the long edge, with
 **no EXIF** (location and camera data). Astro generates the small AVIF/WebP
 versions at build time. Never upscale a photo: the build only scales down.
 
+The two chapter photos carry a subtle warm grade baked into the files (no CSS
+filters), so the studio light matches the golden hero: midtone gamma 0.93,
+channel gains R 1.025 / G 1.0 / B 0.95, then up to 9% blend toward gold
+`#FFD69E` in the mid-highlights (luma above 30%, smoothstep), saved as
+progressive JPEG quality 81, 4:2:0. Apply the same grade to replacement studio
+photos (Pillow is enough; see `odd/tasks/invitacion-artesanal.md`, H3).
+
 The hero photo is only **1672×941 px**, so phones with sharp screens (2x/3x)
 show it slightly soft: a portrait phone draws it ~1500 px wide on screen and
 would need ~4500 px. A higher-resolution export of the same image can replace
