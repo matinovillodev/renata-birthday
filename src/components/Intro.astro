@@ -7,23 +7,16 @@
  * bootstrap adds `intro` to <html> (plain visits only); src/scripts/intro.ts
  * wires `[data-intro-open]`, bursts from `[data-intro-burst]` and removes it.
  *
- * Background: an enchanted-forest path (decorative). Portrait screens show it
- * full-bleed; landscape screens show it sharp at full height over a blurred,
- * darkened copy of the same file (identical sources, so one download).
- * T7 motion hooks: `[data-intro-camera]` (idle zoom, "enter the forest" zoom)
- * and the CSS fireflies.
+ * Background: a blurred, darkened copy of the hero photo (decorative), laid
+ * over exactly the hero's box. It uses the hero's own renditions
+ * (`<Hero photoOnly />`), so the browser downloads the photo once. On open the
+ * curtain fades while the copy settles to the hero's scale, so the sharp hero
+ * underneath "comes into focus" (src/scripts/animations.ts).
+ * Motion hooks: `[data-intro-camera]` (idle zoom, focus pull) and the CSS fireflies.
  */
-import { Picture } from 'astro:assets';
-import forest from '../assets/photos/intro-forest.jpg';
 import { copy } from '../data/event';
+import Hero from './Hero.astro';
 import StarIcon from './StarIcon.astro';
-
-/*
- * Rendered widths: portrait cover = max(100vw, 56.3vh) (736x1308 source);
- * landscape = 56.3vh (full height). Widths never exceed the 736px master.
- */
-const FOREST_WIDTHS = [368, 552, 736];
-const FOREST_SIZES = '(min-aspect-ratio: 4/3) 57vh, max(100vw, 57vh)';
 
 /** Firefly positions (% of the screen), sizes (px) and timings (s), fixed for stable markup. */
 const FIREFLIES = [
@@ -36,30 +29,10 @@ const FIREFLIES = [
 
 <div class="intro" data-intro>
   <div class="intro__scene" aria-hidden="true">
-    <div class="intro__camera" data-intro-camera>
-      <Picture
-        src={forest}
-        alt=""
-        formats={['avif', 'webp']}
-        widths={FOREST_WIDTHS}
-        sizes={FOREST_SIZES}
-        loading="eager"
-        decoding="async"
-        class="intro__fill-img"
-        pictureAttributes={{ class: 'intro__fill', 'data-intro-fill': '' }}
-      />
-      <Picture
-        src={forest}
-        alt=""
-        formats={['avif', 'webp']}
-        widths={FOREST_WIDTHS}
-        sizes={FOREST_SIZES}
-        loading="eager"
-        decoding="async"
-        fetchpriority="high"
-        class="intro__photo-img"
-        pictureAttributes={{ class: 'intro__photo', 'data-intro-bg': '' }}
-      />
+    <div class="intro__backdrop" data-intro-bg>
+      <div class="intro__camera" data-intro-camera>
+        <Hero photoOnly />
+      </div>
     </div>
     <div class="intro__shade"></div>
     <div class="intro__fireflies" data-intro-fireflies>
@@ -140,71 +113,60 @@ const FIREFLIES = [
     pointer-events: none;
   }
 
-  /* Zoom target. Origin = the bright end of the path (42% 45% of the photo). */
-  .intro__camera {
+  /* Exactly the hero's box: its sticky screen at the top of the page. */
+  .intro__backdrop {
     position: absolute;
-    inset: 0;
-    transform-origin: 42% 45%;
-  }
-
-  .intro__camera :global(.intro__photo),
-  .intro__camera :global(.intro__fill) {
-    position: absolute;
-    inset: 0;
-    display: block;
-  }
-
-  .intro__camera :global(.intro__photo-img),
-  .intro__camera :global(.intro__fill-img) {
-    width: 100%;
-    height: 100%;
-    max-width: none;
-    object-fit: cover;
-    object-position: 42% 45%;
-  }
-
-  /* Portrait: only the full-bleed photo. */
-  .intro__camera :global(.intro__fill) {
-    display: none;
-  }
-
-  /* Landscape: sharp photo centered at full height over a blurred, darkened fill. */
-  @media (min-aspect-ratio: 4/3) {
-    .intro__camera {
-      /* Path x on screen: 50% - (0.5 - 0.42) x photo width (photo width = 56.3% of the height). */
-      transform-origin: calc(50% - 4.5vh) 45%;
-    }
-
-    .intro__camera :global(.intro__fill) {
-      display: block;
-      transform: scale(1.15);
-    }
-
-    .intro__camera :global(.intro__fill-img) {
-      filter: blur(28px) brightness(0.55);
-    }
-
-    .intro__camera :global(.intro__photo) {
-      right: auto;
-      left: 50%;
-      width: auto;
-      height: 100%;
-      aspect-ratio: 736 / 1308;
-      translate: -50% 0;
-    }
+    top: 0;
+    right: 0;
+    left: 0;
+    height: var(--screen-height);
+    overflow: hidden;
   }
 
   /*
-   * V3 forest tint: uniform 50% plus an ellipse behind the text up to 85%.
-   * Simulated worst case (95th percentile over the photo, 360x640 to
-   * 1440x900): eyebrow 4.84:1, name 7.55:1.
+   * Same transform origin (center) as the hero photo. Scale = the hero photo's
+   * own scale at the top of the page (1 without motion; 1.14 portrait or 1.06
+   * landscape with motion, see animations.ts) times a small bleed that keeps
+   * the blur's soft edges off-screen. GSAP starts from these same values.
+   */
+  .intro__camera {
+    --hero-zoom: 1;
+    --edge-bleed: 1.12;
+    position: absolute;
+    inset: 0;
+    transform: scale(calc(var(--hero-zoom) * var(--edge-bleed)));
+    will-change: transform;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .intro__camera {
+      --hero-zoom: 1.14;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) and (min-aspect-ratio: 4/3) {
+    .intro__camera {
+      --hero-zoom: 1.06;
+    }
+  }
+
+  .intro__camera :global(img) {
+    filter: blur(28px);
+  }
+
+  /*
+   * V3 forest tint: uniform 55%, an ellipse behind the text up to ~87%, and
+   * a vignette that darkens the edges. Simulated worst case (95th percentile
+   * over the blurred hero photo, 360x640 to 1440x900): eyebrow 4.81:1,
+   * name 5.77:1.
    */
   .intro__shade {
     position: absolute;
     inset: 0;
     background:
       radial-gradient(ellipse 60% 45% at 50% 50%, rgb(var(--tint-forest) / 0.7), rgb(var(--tint-forest) / 0)),
-      rgb(var(--tint-forest) / 0.5);
+      radial-gradient(ellipse 90% 80% at 50% 50%, rgb(var(--tint-forest) / 0) 60%, rgb(var(--tint-forest) / 0.6)),
+      rgb(var(--tint-forest) / 0.55);
   }
 
   /* Fireflies: warm glowing dots that drift and twinkle (transform/opacity only). */

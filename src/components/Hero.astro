@@ -5,7 +5,12 @@
  *
  * T3 hooks: `data-parallax="photo"` on the picture, `data-twinkle` stars,
  * `data-rise` on the text stack (V3 staggers its children in after the intro).
+ *
+ * `photoOnly` renders just the hero photo with the very same renditions, as a
+ * decorative copy for the intro curtain: identical sources mean the browser
+ * downloads the photo once.
  */
+import type { ComponentProps } from 'astro/types';
 import heroLandscape from '../assets/photos/hero-landscape.jpg';
 import heroPortrait from '../assets/photos/hero-portrait.jpg';
 import { copy } from '../data/event';
@@ -15,12 +20,15 @@ import DateLine from './DateLine.astro';
 import PhotoScreen from './PhotoScreen.astro';
 import StarIcon from './StarIcon.astro';
 
-interface Props {
-  /** Day and time labels derived from the event data. */
-  date: EventDateLabels;
-}
+type Props =
+  | {
+      /** Day and time labels derived from the event data. */
+      date: EventDateLabels;
+      photoOnly?: false;
+    }
+  | { photoOnly: true; date?: undefined };
 
-const { date } = Astro.props;
+const props = Astro.props;
 
 /*
  * The hero renditions drop the top of each photo (background only) so that
@@ -32,6 +40,27 @@ const { date } = Astro.props;
 const PORTRAIT_TOP_CROP = 0.12;
 const LANDSCAPE_TOP_CROP = 0.14;
 
+/** Single source of the hero photo renditions (hero and intro curtain). */
+const photo: Pick<ComponentProps<typeof ArtDirectedPhoto>, 'switchAt' | 'narrow' | 'wide'> = {
+  switchAt: '4/3',
+  narrow: {
+    src: heroPortrait,
+    aspectRatio: heroPortrait.width / (heroPortrait.height * (1 - PORTRAIT_TOP_CROP)),
+    cropPosition: 'bottom',
+    widths: [640, 828, 1080, 1290, 1602],
+    sizes: 'max(100vw, min(76vh, 836px))',
+    objectPosition: '50% 30%',
+  },
+  wide: {
+    src: heroLandscape,
+    aspectRatio: heroLandscape.width / (heroLandscape.height * (1 - LANDSCAPE_TOP_CROP)),
+    cropPosition: 'bottom',
+    widths: [960, 1280, 1600, 1920, 2400],
+    sizes: 'max(100vw, min(176vh, 1938px))',
+    objectPosition: '50% 30%',
+  },
+};
+
 const twinkles = [
   { left: '12%', top: '16%', size: 18, delay: '-0.4s' },
   { left: '80%', top: '12%', size: 14, delay: '-1.1s' },
@@ -40,30 +69,12 @@ const twinkles = [
 ];
 ---
 
+{
+  props.photoOnly ? (
+    <ArtDirectedPhoto {...photo} priority alt="" data-hero-copy="" />
+  ) : (
 <PhotoScreen variant="hero">
-  <ArtDirectedPhoto
-    slot="photo"
-    priority
-    alt={copy.hero.photoAlt}
-    switchAt="4/3"
-    data-parallax="photo"
-    narrow={{
-      src: heroPortrait,
-      aspectRatio: heroPortrait.width / (heroPortrait.height * (1 - PORTRAIT_TOP_CROP)),
-      cropPosition: 'bottom',
-      widths: [640, 828, 1080, 1290, 1602],
-      sizes: 'max(100vw, min(76vh, 836px))',
-      objectPosition: '50% 30%',
-    }}
-    wide={{
-      src: heroLandscape,
-      aspectRatio: heroLandscape.width / (heroLandscape.height * (1 - LANDSCAPE_TOP_CROP)),
-      cropPosition: 'bottom',
-      widths: [960, 1280, 1600, 1920, 2400],
-      sizes: 'max(100vw, min(176vh, 1938px))',
-      objectPosition: '50% 30%',
-    }}
-  />
+  <ArtDirectedPhoto slot="photo" {...photo} priority alt={copy.hero.photoAlt} data-parallax="photo" />
 
   <Fragment slot="decor">
     {
@@ -83,7 +94,7 @@ const twinkles = [
   <div class="hero" data-rise>
     <p class="eyebrow hero__eyebrow">{copy.hero.eyebrow}</p>
     <h1 class="display hero__name" tabindex="-1">{copy.hero.name}</h1>
-    <p class="hero__date"><DateLine date={date} /></p>
+    <p class="hero__date"><DateLine date={props.date} /></p>
     <a class="btn btn--light hero__cta" href="#confirmar">{copy.hero.rsvpButton}</a>
     <p class="hero__hint">
       <svg
@@ -102,6 +113,8 @@ const twinkles = [
     </p>
   </div>
 </PhotoScreen>
+  )
+}
 
 <style>
   .twinkle {

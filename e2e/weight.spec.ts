@@ -20,6 +20,9 @@ import { expect, test } from './fixtures';
  * 566,858 - 753,268 B over 6 runs. Worst case 753,268 B = fonts 310,764,
  * AVIF 379,083, JS ~52,000 (gzip), HTML ~7,250, CSS ~4,000.
  * Initial JS gzip from dist: ~52 KB.
+ * T8 (2026-10-29, intro backdrop = blurred hero copy, forest image removed):
+ * 497,085 - 683,495 B over 6 runs (no extra image; the intro shares the hero
+ * download). Budget kept at the T7 value.
  */
 const MEASURED_LOAD_BYTES = 753_268;
 const LOAD_BUDGET_BYTES = Math.round(MEASURED_LOAD_BYTES * 1.2);

@@ -32,10 +32,13 @@ const FLOAT_RISE = 0.35; // of the viewport height per screen scrolled
 const FLOAT_FADE_START = 0.15; // screens
 const FLOAT_FADE_END = 0.6; // screens
 const STRIP_SHIFT_PERCENT = 30;
-/** Intro forest: slow idle "breathing" zoom, then the camera enters the path on open. */
-const FOREST_IDLE_ZOOM = 1.08;
-const FOREST_IDLE_SECONDS = 12;
-const FOREST_ENTER_ZOOM = 1.35;
+/**
+ * Intro backdrop (blurred hero copy): slow idle "breathing" zoom, then a focus
+ * pull on open. EDGE_BLEED must match `--edge-bleed` in Intro.astro.
+ */
+const BACKDROP_EDGE_BLEED = 1.12;
+const BACKDROP_IDLE_ZOOM = 1.08;
+const BACKDROP_IDLE_SECONDS = 12;
 const INTRO_EXIT_SECONDS = 0.9;
 
 export interface Motion {
@@ -148,14 +151,18 @@ export function initMotion(): Motion {
       gsap.set(heroItems, { opacity: 0, y: RISE_OFFSET_PX });
     }
 
-    let forestIdle: gsap.core.Tween | undefined;
+    let backdropIdle: gsap.core.Tween | undefined;
+    // The hero photo's own scale right now (set by the parallax tweens above).
+    const heroPhoto = document.querySelector('#inicio [data-parallax="photo"]');
+    const heroScale = () => (heroPhoto ? Number(gsap.getProperty(heroPhoto, 'scale')) || 1 : 1);
 
     const enterIntro = context.add('enterIntro', (intro: HTMLElement) => {
       const q = gsap.utils.selector(intro);
-      forestIdle = gsap.fromTo(
+      const rest = heroScale() * BACKDROP_EDGE_BLEED;
+      backdropIdle = gsap.fromTo(
         q('[data-intro-camera]'),
-        { scale: 1 },
-        { scale: FOREST_IDLE_ZOOM, duration: FOREST_IDLE_SECONDS, ease: 'sine.inOut', repeat: -1, yoyo: true },
+        { scale: rest },
+        { scale: rest * BACKDROP_IDLE_ZOOM, duration: BACKDROP_IDLE_SECONDS, ease: 'sine.inOut', repeat: -1, yoyo: true },
       );
       gsap.from(q('.intro__star'), { scale: 0, rotation: -200, opacity: 0, duration: 1.2, delay: 0.1, ease: 'back.out(1.6)' });
       gsap.from(q('.intro__eyebrow'), { opacity: 0, y: 8, duration: 0.7, delay: 0.9, ease: 'power1.out' });
@@ -174,16 +181,16 @@ export function initMotion(): Motion {
             ease: 'power3.out',
             delay: (index: number) => RISE_DELAYS[index] ?? RISE_DELAYS[RISE_DELAYS.length - 1],
           });
-          // "Enter the forest": the camera dives into the path while the curtain fades.
-          forestIdle?.kill();
+          // Focus pull: the blurred copy settles onto the hero's exact scale
+          // while the curtain fades, so the sharp hero beneath comes into focus.
+          backdropIdle?.kill();
           gsap.to(gsap.utils.selector(intro)('[data-intro-camera]'), {
-            scale: FOREST_ENTER_ZOOM,
+            scale: heroScale(),
             duration: INTRO_EXIT_SECONDS,
-            ease: 'power2.in',
+            ease: 'power2.out',
           });
           gsap.to(intro, {
             opacity: 0,
-            scale: 1.04,
             duration: INTRO_EXIT_SECONDS,
             ease: 'power2.inOut',
             onComplete: () => resolve(),
