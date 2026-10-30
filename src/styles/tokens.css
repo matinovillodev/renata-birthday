@@ -10,7 +10,7 @@
  */
 :root {
   /* Palette "Luz de hadas" */
-  --color-dark: #3b2a27; /* dark warm: intro curtain, chapter screens, photo band */
+  --color-dark: #3b2a27; /* dark warm: intro curtain, chapter screens, page background */
   --color-cream: #fcf4ea; /* panels, light text on dark (12.4:1 on dark) */
   --color-peach: #f7e2d3; /* alternate panel */
   --color-cocoa: #4e3423; /* headings and body text (10.5:1 on cream, 9.1:1 on peach) */
@@ -50,7 +50,6 @@
   --gutter: 44px;
   --radius-sheet: 32px;
   --radius-pill: 999px;
-  --radius-thumb: 18px;
   --shadow-sheet: 0 -24px 48px rgb(var(--tint-dark) / 0.22);
   /* The first sheet rises over the bright hero veil, where the full shadow reads as a grey band. */
   --shadow-sheet-on-light: 0 -12px 32px rgb(var(--tint-dark) / 0.07);

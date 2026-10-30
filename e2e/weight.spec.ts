@@ -11,9 +11,9 @@ import { expect, test } from './fixtures';
  * measured value recorded below.
  */
 /*
- * The total varies between runs: how many lazy photos (photo-band thumbnails,
- * chapter II photo) finish before `load` depends on timing. The budget uses the
- * worst case seen.
+ * The total varies between runs: how many lazy photos (the chapter photos)
+ * finish before `load` depends on timing. The budget uses the worst case seen.
+ * H2 (2026-10-30) removed the photo band, so totals can only go down.
  *
  * T4 (2026-10-29): 682,538 B (one sample) -> budget 819,046 B.
  * T7 (2026-10-29, + intro forest background, 69,627 B AVIF at 390x844 @3x):

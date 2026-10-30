@@ -18,6 +18,17 @@ test('shows the date, time and venue from the event data', async ({ page }) => {
   await expect(page.locator('[data-rise]')).toContainText(`${dayLabel}${copy.dateTimeSeparator.trimEnd()} ${timeLabel}`);
 });
 
+test('each photo appears once on the page (the intro curtain only reuses the hero download)', async ({ page }) => {
+  // Built renditions keep the master's file name: /_astro/<master>.<hash>_<variant>.<ext>.
+  const masters = await page.locator('img').evaluateAll((images) =>
+    images
+      .filter((img) => !img.closest('[data-intro]'))
+      .map((img) => (img.getAttribute('src') ?? '').split('/').pop()?.split('.')[0] ?? ''),
+  );
+  expect(masters.length, 'photos on the page').toBeGreaterThan(0);
+  expect(masters.filter((name, index) => masters.indexOf(name) !== index), 'photos shown more than once').toEqual([]);
+});
+
 test('the WhatsApp link opens the pre-filled message in a new tab', async ({ page }) => {
   const link = page.getByRole('link', { name: copy.rsvp.button });
   await expect(link).toHaveAttribute('href', buildWhatsAppUrl(event.whatsapp.digits, event.rsvp.message));

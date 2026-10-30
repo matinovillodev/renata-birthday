@@ -5,7 +5,8 @@
  *
  * Section anchors (side nav targets): #inicio, #invitacion, #el-gran-dia,
  * #como-llegar, #confirmar (the RSVP panel itself, so links land on the
- * WhatsApp button). Chapters carry `data-chapter` (1-4) for T3.
+ * WhatsApp button). Chapters carry `data-chapter` (1-3) for the motion layer.
+ * Each photo appears once (the intro curtain reuses the hero download).
  */
 import { getImage } from 'astro:assets';
 import heroFairy from '../assets/photos/hero-fairy.jpg';
@@ -16,7 +17,6 @@ import Fairies from '../components/Fairies.astro';
 import Hero from '../components/Hero.astro';
 import Intro from '../components/Intro.astro';
 import InvitationPanel from '../components/InvitationPanel.astro';
-import PhotoBand from '../components/PhotoBand.astro';
 import RsvpPanel from '../components/RsvpPanel.astro';
 import SideNav from '../components/SideNav.astro';
 import bandLandscape from '../assets/photos/band-landscape.jpg';
@@ -65,9 +65,7 @@ const ogImageUrl = new URL(ogImage.src, Astro.site ?? Astro.url).href;
       <InvitationPanel />
     </div>
 
-    <PhotoBand />
-
-    <div class="chapter chapter--3" data-chapter="3">
+    <div class="chapter chapter--2" data-chapter="2">
       <ChapterScreen
         photo={bandLandscape}
         alt={copy.chapterDay.photoAlt}
@@ -80,7 +78,7 @@ const ogImageUrl = new URL(ogImage.src, Astro.site ?? Astro.url).href;
       <EventDetails dayLabel={date.dayLabel} timeLabel={date.timeLabel} />
     </div>
 
-    <div class="chapter chapter--4" data-chapter="4">
+    <div class="chapter chapter--3" data-chapter="3">
       <ChapterScreen
         photo={closingLandscape}
         alt={copy.chapterRsvp.photoAlt}
@@ -116,11 +114,11 @@ const ogImageUrl = new URL(ogImage.src, Astro.site ?? Astro.url).href;
   }
 
   /* Later chapters paint over earlier ones, as in V3. */
-  .chapter--3 {
+  .chapter--2 {
     z-index: 4;
   }
 
-  .chapter--4 {
+  .chapter--3 {
     z-index: 5;
   }
 

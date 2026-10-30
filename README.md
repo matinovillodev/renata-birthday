@@ -57,10 +57,11 @@ Replace the files **keeping their names**:
 | File | Used for |
 | --- | --- |
 | `hero-fairy.jpg` | Hero ("Luz de hadas") on every screen, also blurred behind the "Abrir invitación" curtain; link preview image. |
-| `hero-portrait.jpg` | Photo band. |
-| `hero-landscape.jpg` | Photo band. |
-| `band-landscape.jpg` | Chapter "El gran día"; photo band. |
-| `closing-landscape.jpg` | Chapter "¿Nos acompañan?"; photo band. |
+| `band-landscape.jpg` | Chapter "El gran día". |
+| `closing-landscape.jpg` | Chapter "¿Nos acompañan?". |
+
+Each photo appears once (an e2e test checks it), so every image a guest sees
+is new.
 
 Each file must be a JPEG in **sRGB**, at most **2400 px** on the long edge, with
 **no EXIF** (location and camera data). Astro generates the small AVIF/WebP

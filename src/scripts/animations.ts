@@ -1,7 +1,6 @@
 /**
  * V3 motion with GSAP + ScrollTrigger: intro entrance and opening, staggered
- * hero text, photo parallax, floating chapter titles, photo-band strips and
- * sheet reveals. Everything is created inside `gsap.matchMedia()` for
+ * hero text, photo parallax, floating chapter titles and sheet reveals. Everything is created inside `gsap.matchMedia()` for
  * "no-preference" motion, so it is reverted (inline styles removed, triggers
  * killed) as soon as the guest asks for reduced motion.
  *
@@ -34,7 +33,6 @@ const PHOTO_ZOOM_SCREENS = 1.2;
 const FLOAT_RISE = 0.35; // of the viewport height per screen scrolled
 const FLOAT_FADE_START = 0.15; // screens
 const FLOAT_FADE_END = 0.6; // screens
-const STRIP_SHIFT_PERCENT = 30;
 /**
  * Intro backdrop (blurred hero copy): slow idle "breathing" zoom, then a focus
  * pull on open. EDGE_BLEED must match `--edge-bleed` in Intro.astro.
@@ -109,18 +107,6 @@ function setupFloatingText(): void {
   }
 }
 
-function setupStrips(): void {
-  const band = document.querySelector('[data-chapter="2"]');
-  if (!band) return;
-  const scrollTrigger = { trigger: band, start: 'top bottom', end: 'bottom top', scrub: true };
-  gsap.fromTo('[data-parallax="strip"]', { xPercent: 0 }, { xPercent: -STRIP_SHIFT_PERCENT, ease: 'none', scrollTrigger });
-  gsap.fromTo(
-    '[data-parallax="strip-reverse"]',
-    { xPercent: -STRIP_SHIFT_PERCENT },
-    { xPercent: 0, ease: 'none', scrollTrigger: { ...scrollTrigger } },
-  );
-}
-
 /** Not in V3: sheet content eases in once as it enters the viewport. */
 function setupSheetReveals(): void {
   for (const block of gsap.utils.toArray<HTMLElement>('.sheet > *')) {
@@ -145,7 +131,6 @@ export function initMotion(): Motion {
 
     setupPhotoParallax(wide);
     setupFloatingText();
-    setupStrips();
     setupSheetReveals();
 
     const heroItems = gsap.utils.toArray<HTMLElement>('[data-rise] > *');
