@@ -1,27 +1,31 @@
-/** Human-readable Spanish labels for the event start, as the V3 design shows them. */
-export interface EventDateLabels {
-  /** Capitalized weekday, day and month without a comma, e.g. `Sábado 28 de noviembre`. */
-  dayLabel: string;
-  /** 24-hour time followed by `hs`, e.g. `13:30 hs`. */
-  timeLabel: string;
+/**
+ * The event start as the phrases the invitation sentence is written with:
+ * "El sábado 28 de noviembre, a las 13:30, en el …".
+ */
+export interface EventDatePhrases {
+  /** Lowercase weekday, e.g. `sábado`. */
+  weekday: string;
+  /** Day and month, e.g. `28 de noviembre`. */
+  date: string;
+  /** 24-hour time introduced as Spanish does, e.g. `a las 13:30` (`a la 1:15` at one o'clock). */
+  time: string;
 }
 
 const LOCALE = 'es-AR';
 
 /**
- * Formats an ISO 8601 date-time into the day and time labels of the
- * invitation, evaluated in `timeZone` so the output never depends on the
- * machine that builds the site.
+ * Formats an ISO 8601 date-time into the phrases of the invitation, evaluated
+ * in `timeZone` so the output never depends on the machine that builds the
+ * site.
  *
- * The labels are composed from `Intl.DateTimeFormat#formatToParts` instead of
- * `format()` because the default `es-AR` output (`sábado, 28 de noviembre`)
- * has a lowercase weekday and a comma that the design does not use.
+ * Built from `Intl.DateTimeFormat#formatToParts` so each phrase can be placed
+ * in a sentence (and kept on one line) on its own.
  *
  * @param iso Date-time with an explicit offset, e.g. `2026-11-28T13:30:00-03:00`.
  * @param timeZone IANA time zone, e.g. `America/Argentina/Cordoba`.
  * @throws {RangeError} When `iso` cannot be parsed or `timeZone` is unknown.
  */
-export function formatEventDate(iso: string, timeZone: string): EventDateLabels {
+export function formatEventDate(iso: string, timeZone: string): EventDatePhrases {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) {
     throw new RangeError(`formatEventDate: invalid date "${iso}".`);
@@ -29,10 +33,13 @@ export function formatEventDate(iso: string, timeZone: string): EventDateLabels 
 
   const day = formatParts(date, timeZone, { weekday: 'long', day: 'numeric', month: 'long' });
   const time = formatParts(date, timeZone, { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+  // Intl pads the hour ("09"); a written invitation says "a las 9:05".
+  const hour = Number(pick(time, 'hour'));
 
   return {
-    dayLabel: `${capitalize(pick(day, 'weekday'))} ${pick(day, 'day')} de ${pick(day, 'month')}`,
-    timeLabel: `${pick(time, 'hour')}:${pick(time, 'minute')} hs`,
+    weekday: pick(day, 'weekday').toLocaleLowerCase(LOCALE),
+    date: `${pick(day, 'day')} de ${pick(day, 'month')}`,
+    time: `${hour === 1 ? 'a la' : 'a las'} ${hour}:${pick(time, 'minute')}`,
   };
 }
 
@@ -50,8 +57,4 @@ function pick(parts: Intl.DateTimeFormatPart[], type: Intl.DateTimeFormatPartTyp
     throw new Error(`formatEventDate: Intl returned no "${type}" part.`);
   }
   return part.value;
-}
-
-function capitalize(text: string): string {
-  return text.charAt(0).toLocaleUpperCase(LOCALE) + text.slice(1);
 }

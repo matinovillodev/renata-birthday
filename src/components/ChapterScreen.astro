@@ -1,7 +1,7 @@
 ---
 /**
- * Sticky chapter title over a full-bleed photo ("Capítulo II · El gran día",
- * "Capítulo III · ¿Nos acompañan?"). The chapter's sheet scrolls over it.
+ * Sticky chapter title over a full-bleed photo ("El gran día", "¿Nos
+ * acompañan?"), with no label above it. The chapter's sheet scrolls over it.
  *
  * Phones (viewport narrower than 3:4) get the centered 3:4 crop of the
  * landscape master, so they skip the unseen sides; `narrowFocus` re-aims the
@@ -19,13 +19,12 @@ interface Props {
   focus: string;
   /** object-position inside the centered 3:4 crop that shows V3's slice on a 390x844 phone. */
   narrowFocus: string;
-  eyebrow: string;
   title: string;
   /** Title size as in V3, e.g. `clamp(56px, 14vw, 128px)`. */
   titleSize: string;
 }
 
-const { photo, alt, focus, narrowFocus, eyebrow, title, titleSize } = Astro.props;
+const { photo, alt, focus, narrowFocus, title, titleSize } = Astro.props;
 ---
 
 <PhotoScreen variant="chapter">
@@ -49,17 +48,11 @@ const { photo, alt, focus, narrowFocus, eyebrow, title, titleSize } = Astro.prop
       objectPosition: focus,
     }}
   />
-  <p class="eyebrow chapter__eyebrow">{eyebrow}</p>
   <p class="display chapter__title" style={`font-size: ${titleSize}`}>{title}</p>
 </PhotoScreen>
 
 <style>
-  .chapter__eyebrow {
-    color: var(--color-gold-light);
-  }
-
   .chapter__title {
-    margin-top: 8px;
     font-style: italic;
     line-height: 1;
   }

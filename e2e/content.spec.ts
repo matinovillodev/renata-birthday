@@ -1,21 +1,41 @@
 import { copy, event } from '../src/data/event';
 import { formatEventDate } from '../src/lib/event-date';
+import { plainSpaces } from '../src/lib/text';
 import { buildWhatsAppUrl } from '../src/lib/whatsapp';
 import { expect, openInvitation, test } from './fixtures';
 
-const { dayLabel, timeLabel } = formatEventDate(event.startsAt, event.timeZone);
+const date = formatEventDate(event.startsAt, event.timeZone);
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
   await openInvitation(page);
 });
 
-test('shows the date, time and venue from the event data', async ({ page }) => {
-  const details = page.locator('#el-gran-dia');
-  await expect(details).toContainText(dayLabel);
-  await expect(details).toContainText(timeLabel);
-  await expect(details).toContainText(event.venue.name);
-  await expect(page.locator('[data-rise]')).toContainText(`${dayLabel}${copy.dateTimeSeparator.trimEnd()} ${timeLabel}`);
+test('says the date, time and venue in one sentence built from the event data', async ({ page }) => {
+  const sentence = page.getByRole('heading', { level: 2, name: plainSpaces(copy.details.sentence(date)) });
+  await expect(sentence).toBeVisible();
+  await expect(sentence).toHaveText('El sábado 28 de noviembre, a las 13:30, en el Centro de Jubilados 12 de Mayo.');
+  await expect(page.locator('[data-rise]')).toContainText(plainSpaces(copy.hero.when(date)));
+});
+
+test('says each thing once: no repeated farewell, no date in the closing', async ({ page }) => {
+  await expect(page.getByText(/te esperamos/i)).toHaveCount(1);
+  const footer = page.locator('footer');
+  await expect(footer).toHaveText(copy.closing.heading);
+  await expect(footer).not.toContainText(date.time);
+});
+
+test('shows no tracked all-caps labels or middle-dot meta strings', async ({ page }) => {
+  const labels = await page.locator('body *').evaluateAll((elements) =>
+    elements
+      .filter((el) => el.checkVisibility() && [...el.childNodes].some((node) => node.nodeType === Node.TEXT_NODE && node.textContent?.trim()))
+      .filter((el) => {
+        const style = getComputedStyle(el);
+        return style.textTransform === 'uppercase' || parseFloat(style.letterSpacing) > 0.5 || el.textContent?.includes('·');
+      })
+      .map((el) => el.textContent?.trim().slice(0, 40)),
+  );
+  expect(labels).toEqual([]);
 });
 
 test('each photo appears once on the page (the intro curtain only reuses the hero download)', async ({ page }) => {

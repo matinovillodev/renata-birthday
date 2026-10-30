@@ -19,13 +19,13 @@ Everything a host would change lives in **one file**: `src/data/event.ts`.
 | Field | What it does |
 | --- | --- |
 | `childName` | Name in the headings, the intro and the WhatsApp message. |
-| `startsAt` | Date and time as ISO 8601 **with offset**, e.g. `2026-11-28T13:30:00-03:00`. The page shows "Sábado 28 de noviembre · 13:30 hs" (no year). |
+| `startsAt` | Date and time as ISO 8601 **with offset**, e.g. `2026-11-28T13:30:00-03:00`. The page writes it into sentences: "el sábado 28 de noviembre, a las 13:30" under the name, and "El sábado 28 de noviembre, a las 13:30, en el Centro de Jubilados 12 de Mayo." in the details (no year). |
 | `timeZone` | IANA zone used to display `startsAt`, e.g. `America/Argentina/Cordoba`. |
-| `venue.name` | Venue shown in the details, the map caption and the closing. |
+| `venue.name` | Venue in the details sentence, the map and the link preview. The sentence says "en el …", so write a name that takes "el". |
 | `venue.mapEmbedUrl` | `src` of the embedded Google Map (see below). |
 | `whatsapp.digits` | Number for the RSVP link: country code + area code + number, digits only (`5493517622809`). |
 | `rsvp.message` | Text pre-filled in WhatsApp. Keep the blanks for name and number of people. |
-| `copy` | Every visible Spanish text, in page order. Texts with the name or venue are built from the fields above. |
+| `copy` | Every visible Spanish text, in page order. Texts with the name, date or venue are built from the fields above. Written like a printed card: sentence case, no all-caps labels, facts in sentences; each date phrase stays on one line. |
 
 Reference fields (not shown on the page):
 

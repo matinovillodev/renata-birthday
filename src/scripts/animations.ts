@@ -43,7 +43,7 @@ const BACKDROP_IDLE_SECONDS = 12;
 const INTRO_EXIT_SECONDS = 0.9;
 
 export interface Motion {
-  /** Plays the curtain entrance (star, eyebrow, name, button). */
+  /** Plays the curtain entrance (star, lead-in, name, button). */
   enterIntro(intro: HTMLElement): void;
   /** Fades the curtain out while the hero text rises; resolves when done. */
   openIntro(intro: HTMLElement): Promise<void>;
@@ -153,7 +153,7 @@ export function initMotion(): Motion {
         { scale: rest * BACKDROP_IDLE_ZOOM, duration: BACKDROP_IDLE_SECONDS, ease: 'sine.inOut', repeat: -1, yoyo: true },
       );
       gsap.from(q('.intro__star'), { scale: 0, rotation: -200, opacity: 0, duration: 1.2, delay: 0.1, ease: 'back.out(1.6)' });
-      gsap.from(q('.intro__eyebrow'), { opacity: 0, y: 8, duration: 0.7, delay: 0.9, ease: 'power1.out' });
+      gsap.from(q('.intro__lead'),{ opacity: 0, y: 8, duration: 0.7, delay: 0.9, ease: 'power1.out' });
       gsap.from(q('.intro__name'), { opacity: 0, y: 16, scale: 0.96, duration: 1.1, delay: 1.05, ease: 'power3.out' });
       gsap.from(q('.intro__open'), { opacity: 0, y: 8, duration: 0.8, delay: 1.7, ease: 'power1.out' });
     }) as Motion['enterIntro'];

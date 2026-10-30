@@ -74,14 +74,6 @@ html.lenis {
   font-variation-settings: var(--font-soft);
 }
 
-/* Small uppercase label used above titles. */
-.eyebrow {
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: var(--tracking-eyebrow);
-  text-transform: uppercase;
-}
-
 /*
  * Rounded panel that scrolls over a sticky photo screen (V3 sections
  * #invitacion, #el-gran-dia and the RSVP panel), in cream or peach.

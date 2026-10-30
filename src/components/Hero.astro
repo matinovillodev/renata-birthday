@@ -18,16 +18,15 @@
 import type { ComponentProps } from 'astro/types';
 import heroFairy from '../assets/photos/hero-fairy.jpg';
 import { copy } from '../data/event';
-import type { EventDateLabels } from '../lib/event-date';
+import type { EventDatePhrases } from '../lib/event-date';
 import ArtDirectedPhoto from './ArtDirectedPhoto.astro';
-import DateLine from './DateLine.astro';
 import PhotoScreen from './PhotoScreen.astro';
 import StarIcon from './StarIcon.astro';
 
 type Props =
   | {
-      /** Day and time labels derived from the event data. */
-      date: EventDateLabels;
+      /** Date phrases derived from the event data. */
+      date: EventDatePhrases;
       photoOnly?: false;
     }
   | { photoOnly: true; date?: undefined };
@@ -84,9 +83,9 @@ const twinkles = [
   </Fragment>
 
   <div class="hero" data-rise>
-    <p class="eyebrow hero__eyebrow">{copy.hero.eyebrow}</p>
+    <p class="display hero__lead">{copy.hero.leadIn}</p>
     <h1 class="display hero__name" tabindex="-1">{copy.hero.name}</h1>
-    <p class="hero__date"><DateLine date={props.date} /></p>
+    <p class="hero__date">{copy.hero.when(props.date)}</p>
     <a class="btn btn--accent hero__cta" href="#confirmar">{copy.hero.rsvpButton}</a>
     <p class="hero__hint">
       <svg
@@ -125,8 +124,8 @@ const twinkles = [
   :global(:root) {
     --hero-name-size: clamp(88px, 24vw, 200px);
     /*
-     * Eyebrow, date and hint on two lines each (phones), gaps, button, 72px
-     * padding and a 40px clearance, where the veil's fade starts.
+     * Lead-in and date on two lines each, the hint on one (phones), gaps,
+     * button, 72px padding and a 40px clearance, where the veil's fade starts.
      */
     --hero-copy-fixed: 401px;
     --hero-chin: 0.56;
@@ -144,7 +143,7 @@ const twinkles = [
     }
   }
 
-  /* Wider portrait screens: the eyebrow, date and hint fit on one line. */
+  /* Wider portrait screens: the lead-in, date and hint fit on one line. */
   @media (min-width: 600px) {
     :global(:root) {
       --hero-copy-fixed: 325px;
@@ -229,7 +228,7 @@ const twinkles = [
 
   /*
    * Landscape: a soft cream cushion right behind the copy (on top of the
-   * screen-wide halo), so the small eyebrow and hint keep AA contrast over
+   * screen-wide halo), so the lead-in and the hint keep AA contrast over
    * the flowers and bokeh at any landscape size, rotated phones included.
    */
   @media (min-aspect-ratio: 4/3) {
@@ -250,7 +249,17 @@ const twinkles = [
     }
   }
 
-  .hero__eyebrow {
+  /*
+   * The lead-in reads into the name, like the first line of a printed
+   * invitation: italic, sentence case, set close above it.
+   */
+  .hero__lead {
+    margin-bottom: -2px;
+    font-size: clamp(20px, 5.4vw, 26px);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.25;
+    text-wrap: balance;
     color: var(--color-caramel);
   }
 
@@ -262,10 +271,13 @@ const twinkles = [
     color: var(--color-accent);
   }
 
+  /* Continues the sentence ("el sábado 28 de noviembre, a las 13:30"); lines break only between its phrases. */
   .hero__date {
     margin-top: 6px;
-    font-size: 20px;
+    font-size: 19px;
     font-weight: 600;
+    line-height: 1.45;
+    text-wrap: balance;
     color: var(--color-cocoa);
   }
 
@@ -276,10 +288,8 @@ const twinkles = [
   /* The arrow flows inline so it stays next to the text when the hint wraps. */
   .hero__hint {
     margin-top: 18px;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    font-size: 15px;
+    font-weight: 600;
     text-wrap: balance;
     color: var(--color-cocoa-muted);
   }

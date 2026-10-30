@@ -6,12 +6,16 @@
  *   ("Inmersiva con parallax"), copied verbatim. Texts that mention the child
  *   or the venue are built from `event` so a fact is never written twice.
  *
- * The date and time lines ("Sábado 28 de noviembre · 13:30 hs") are NOT
- * stored as text: the page derives them from `event.startsAt` with
- * `formatEventDate` (src/lib/event-date.ts), joined by `copy.dateTimeSeparator`.
+ * The date is NOT stored as text: the page derives its phrases ("sábado",
+ * "28 de noviembre", "a las 13:30") from `event.startsAt` with
+ * `formatEventDate` (src/lib/event-date.ts), and the copy below writes them
+ * into sentences. Each phrase is kept on one line (`keepTogether`), so a line
+ * only breaks between phrases.
  *
  * Unknown facts must be written as `[PLACEHOLDER: …]`; never invent them.
  */
+import type { EventDatePhrases } from '../lib/event-date';
+import { keepTogether } from '../lib/text';
 
 /** Facts about the party. Every field is rendered somewhere on the page. */
 export interface EventData {
@@ -87,8 +91,14 @@ export const event: EventData = {
   },
 };
 
+/** "el sábado 28 de noviembre, a las 13:30": lines break only between the three phrases. */
+function when(date: EventDatePhrases, article: 'el' | 'El'): string {
+  return `${keepTogether(`${article} ${date.weekday}`)} ${keepTogether(date.date)}, ${keepTogether(date.time)}`;
+}
+
 /**
- * Visible copy of the V3 design, grouped in page order.
+ * Visible copy, grouped in page order. Written like a printed invitation:
+ * sentence case, no labels above headings, facts in sentences.
  *
  * Register note: V3 contains two voseo imperatives, kept verbatim and marked
  * with `REGISTER:` below until the neutral-Spanish wording is decided.
@@ -96,8 +106,6 @@ export const event: EventData = {
 export const copy = {
   /** Browser tab title: V3 document title without its " — Inmersiva" variant suffix. */
   documentTitle: `Invitación de ${childName}`,
-  /** Joins the day and time labels in the hero and closing lines. */
-  dateTimeSeparator: ' · ',
 
   /** Fixed side navigation (one entry per section anchor, in page order). */
   nav: {
@@ -113,16 +121,18 @@ export const copy = {
 
   /** Full-screen opening curtain shown before the invitation. */
   intro: {
-    eyebrow: 'Primer cumpleaños',
+    /** Italic line above the name. */
+    leadIn: 'Primer cumpleaños',
     name: childName,
     openButton: 'Abrir invitación',
   },
 
-  /** Chapter I: full-bleed hero photo. */
+  /** Chapter I: full-bleed hero photo. The lead-in, the name and the date read as one sentence. */
   hero: {
     photoAlt: `${childName} vestida de hada, sonriendo`,
-    eyebrow: 'Te invitamos al primer cumpleaños de',
+    leadIn: 'Te invitamos al primer cumpleaños de',
     name: childName,
+    when: (date: EventDatePhrases) => when(date, 'el'),
     rsvpButton: 'Confirmar asistencia',
     // REGISTER: voseo imperative ("Deslizá"), kept verbatim from V3.
     scrollHint: 'Deslizá para entrar al bosque',
@@ -137,16 +147,13 @@ export const copy = {
   /** Chapter II photo title. */
   chapterDay: {
     photoAlt: `${childName} con alas de hada, apoyada en un banquito en un bosque encantado`,
-    eyebrow: 'Capítulo II',
     title: 'El gran día',
   },
 
-  /** Sand sheet with the day, time and place. Values come from `event`. */
+  /** Peach sheet: day, time and place as one sentence (also the section heading). */
   details: {
-    heading: 'Te esperamos',
-    dayLabel: 'Día',
-    timeLabel: 'Hora',
-    placeLabel: 'Lugar',
+    // "en el" travels with the venue's first word, so it never ends a line.
+    sentence: (date: EventDatePhrases) => `${when(date, 'El')}, ${keepTogether('en el')} ${venueName}.`,
   },
 
   /** "How to get there" heading above the embedded map. */
@@ -159,7 +166,6 @@ export const copy = {
   /** Chapter III photo title. */
   chapterRsvp: {
     photoAlt: `${childName} sentada entre hongos de cuento, mirando hacia arriba`,
-    eyebrow: 'Capítulo III',
     title: '¿Nos acompañan?',
   },
 
@@ -170,7 +176,7 @@ export const copy = {
     button: 'Confirmar por WhatsApp',
   },
 
-  /** Closing footer; the date line and venue below it come from `event`. */
+  /** Closing footer: only the farewell (the facts are already in the details sentence). */
   closing: {
     heading: '¡Te esperamos!',
   },

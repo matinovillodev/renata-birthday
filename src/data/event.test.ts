@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { formatEventDate } from '../lib/event-date';
+import { plainSpaces } from '../lib/text';
 import { copy, event } from './event';
 
 /**
@@ -28,11 +29,35 @@ describe('event data', () => {
     expect(event.venue.coordinates).toEqual({ lat: -31.352343, lng: -64.1810758 });
   });
 
-  it('has a start date that renders as the V3 day and time labels', () => {
+  it('has a start date that reads as Saturday 28 November at 13:30', () => {
     expect(formatEventDate(event.startsAt, event.timeZone)).toEqual({
-      dayLabel: 'Sábado 28 de noviembre',
-      timeLabel: '13:30 hs',
+      weekday: 'sábado',
+      date: '28 de noviembre',
+      time: 'a las 13:30',
     });
+  });
+
+  it('writes the details as one invitation sentence built from the data', () => {
+    const date = formatEventDate(event.startsAt, event.timeZone);
+    expect(plainSpaces(copy.details.sentence(date))).toBe(
+      'El sábado 28 de noviembre, a las 13:30, en el Centro de Jubilados 12 de Mayo.',
+    );
+    // A line may only break between phrases, never inside "a las 13:30".
+    expect(copy.details.sentence(date)).toContain('a las 13:30');
+    expect(copy.details.sentence(date)).toContain('en el Centro');
+  });
+
+  it('continues the hero lead-in and name with the date', () => {
+    const date = formatEventDate(event.startsAt, event.timeZone);
+    expect(plainSpaces(`${copy.hero.leadIn} ${copy.hero.name} ${copy.hero.when(date)}`)).toBe(
+      'Te invitamos al primer cumpleaños de Renata el sábado 28 de noviembre, a las 13:30',
+    );
+  });
+
+  it('writes no tracked-caps labels or middle-dot strings in the copy', () => {
+    const texts = JSON.stringify(copy);
+    expect(texts).not.toContain('·');
+    expect(texts).not.toMatch(/Capítulo/);
   });
 
   it('derives the visible name-dependent copy from the data fields', () => {

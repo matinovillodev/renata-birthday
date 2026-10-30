@@ -15,13 +15,13 @@
   --color-peach: #f7e2d3; /* alternate panel */
   --color-cocoa: #4e3423; /* headings and body text (10.5:1 on cream, 9.1:1 on peach) */
   --color-cocoa-muted: #75594a; /* secondary text (5.9:1 on cream) */
-  --color-caramel: #8a5a2e; /* overlines and labels (4.7:1 on peach) */
+  --color-caramel: #8a5a2e; /* hero lead-in (4.7:1 on peach) */
   --color-accent: #9a4a57; /* rosa profundo: name, call to action, icons, links (white text 6.0:1) */
   --color-accent-hover: #7a3844;
   --color-moss: #5e6a3a; /* WhatsApp button (white text 5.8:1) */
   --color-gold: #d9a462; /* decor, active nav, focus ring */
-  --color-gold-intro: #e2b66c; /* intro star and eyebrow, on dark */
-  --color-gold-light: #f3dfa6; /* eyebrows, twinkles and fireflies on dark */
+  --color-gold-intro: #e2b66c; /* intro star and lead-in, on dark */
+  --color-gold-light: #f3dfa6; /* intro fireflies on dark */
   --color-coral: #eba691; /* particles, butterflies */
   --color-coral-light: #f5cdbf; /* particles; the intro name on dark */
   --color-map-placeholder: #eedcc6;
@@ -38,7 +38,6 @@
   --font-size-body: 18px;
   --line-height-body: 1.6;
   --font-soft: 'SOFT' 100; /* Fraunces softness axis, as in V3 */
-  --tracking-eyebrow: 0.16em;
 
   /* Layout */
   --screen-height: min(100vh, 1100px);
@@ -60,7 +59,8 @@
    * Scrim behind the light chapter text that sits on photos: V3's gradients
    * alone leave it at ~1.5:1 over bright areas. With the dark warm tint
    * (lighter than V3's forest, which needed 0.65 in T2) this text-anchored
-   * scrim needs 0.75 to keep the small eyebrow >= 4.5:1 over white.
+   * scrim needed 0.75 for the small labels that sat above the titles; it is
+   * kept for the large italic titles over the brighter, warmer photos (H3).
    */
   --scrim-alpha: 0.75;
   --scrim-fade: 96px;

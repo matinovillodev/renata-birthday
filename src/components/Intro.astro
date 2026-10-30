@@ -51,7 +51,7 @@ const FIREFLIES = [
     <StarIcon size={64} color="var(--color-gold-intro)" class="intro__star" />
     <div class="intro__burst" data-intro-burst aria-hidden="true"></div>
   </div>
-  <p class="eyebrow intro__eyebrow">{copy.intro.eyebrow}</p>
+  <p class="display intro__lead">{copy.intro.leadIn}</p>
   <p class="display intro__name">{copy.intro.name}</p>
   <button type="button" class="btn btn--light intro__open" data-intro-open>
     <svg
@@ -102,7 +102,7 @@ const FIREFLIES = [
     z-index: 1;
   }
 
-  .intro__eyebrow,
+  .intro__lead,
   .intro__name {
     text-shadow: 0 1px 3px rgb(var(--tint-dark) / 0.5);
   }
@@ -245,10 +245,13 @@ const FIREFLIES = [
     height: 0;
   }
 
-  .intro__eyebrow {
+  /* Italic, sentence case: the first line of the card, read into the name below. */
+  .intro__lead {
     margin-top: 12px;
-    font-size: 13px;
-    letter-spacing: 0.18em;
+    font-size: 24px;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.2;
     color: var(--color-gold-intro);
   }
 
