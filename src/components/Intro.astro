@@ -48,7 +48,7 @@ const FIREFLIES = [
   </div>
 
   <div class="intro__emblem">
-    <StarIcon size={64} color="var(--color-gold)" class="intro__star" />
+    <StarIcon size={64} color="var(--color-gold-intro)" class="intro__star" />
     <div class="intro__burst" data-intro-burst aria-hidden="true"></div>
   </div>
   <p class="eyebrow intro__eyebrow">{copy.intro.eyebrow}</p>
@@ -91,8 +91,8 @@ const FIREFLIES = [
     gap: 12px;
     padding: 24px;
     overflow: hidden;
-    background: var(--color-forest);
-    color: var(--color-ivory);
+    background: var(--color-dark);
+    color: var(--color-cream);
     text-align: center;
   }
 
@@ -104,7 +104,7 @@ const FIREFLIES = [
 
   .intro__eyebrow,
   .intro__name {
-    text-shadow: 0 1px 3px rgb(var(--tint-forest) / 0.5);
+    text-shadow: 0 1px 3px rgb(var(--tint-dark) / 0.5);
   }
 
   .intro__scene {
@@ -155,18 +155,24 @@ const FIREFLIES = [
   }
 
   /*
-   * V3 forest tint: uniform 55%, an ellipse behind the text up to ~87%, and
-   * a vignette that darkens the edges. Measured worst case (95th percentile
-   * of the pixels behind the text, blurred "Luz de hadas" photo, 360x640 to
-   * 1920x1080 and a rotated phone): eyebrow 4.71:1, name 5.44:1.
+   * Dark warm tint (V4's curtain color): uniform 60%, an ellipse with a flat
+   * center behind the text up to ~92%, and a vignette that darkens the
+   * edges. The warm tint is lighter than V3's forest, so it needs more
+   * coverage over this bright photo. Measured worst case: see
+   * odd/tasks/luz-de-hadas.md (95th percentile of the pixels behind the text).
    */
   .intro__shade {
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(ellipse 60% 45% at 50% 50%, rgb(var(--tint-forest) / 0.7), rgb(var(--tint-forest) / 0)),
-      radial-gradient(ellipse 90% 80% at 50% 50%, rgb(var(--tint-forest) / 0) 60%, rgb(var(--tint-forest) / 0.6)),
-      rgb(var(--tint-forest) / 0.55);
+      radial-gradient(
+        ellipse 70% 55% at 50% 50%,
+        rgb(var(--tint-dark) / 0.8) 0%,
+        rgb(var(--tint-dark) / 0.8) 40%,
+        rgb(var(--tint-dark) / 0) 100%
+      ),
+      radial-gradient(ellipse 90% 80% at 50% 50%, rgb(var(--tint-dark) / 0) 60%, rgb(var(--tint-dark) / 0.6)),
+      rgb(var(--tint-dark) / 0.6);
   }
 
   /* Fireflies: warm glowing dots that drift and twinkle (transform/opacity only). */
@@ -188,7 +194,7 @@ const FIREFLIES = [
     height: var(--size);
     border-radius: 50%;
     background: var(--color-gold-light);
-    box-shadow: 0 0 calc(var(--size) * 2) calc(var(--size) / 2) rgb(243 223 166 / 0.6);
+    box-shadow: 0 0 calc(var(--size) * 2) calc(var(--size) / 2) rgb(243 223 166 / 0.6); /* --color-gold-light */
     opacity: 0;
     animation:
       firefly-drift var(--drift) ease-in-out var(--delay) infinite alternate,
@@ -227,7 +233,7 @@ const FIREFLIES = [
   }
 
   .intro__emblem :global(.intro__star) {
-    filter: drop-shadow(0 0 16px rgb(216 183 106 / 0.7));
+    filter: drop-shadow(0 0 16px rgb(var(--tint-gold-intro) / 0.7));
   }
 
   /* Burst origin at the star's center; T3 renders the sparkles inside. */
@@ -243,18 +249,18 @@ const FIREFLIES = [
     margin-top: 12px;
     font-size: 13px;
     letter-spacing: 0.18em;
-    color: var(--color-gold);
+    color: var(--color-gold-intro);
   }
 
   .intro__name {
     font-size: 76px;
     font-style: italic;
     line-height: 1;
-    color: var(--color-pink-light);
+    color: var(--color-coral-light);
   }
 
   .intro__open {
     margin-top: 32px;
-    box-shadow: 0 0 32px rgb(216 183 106 / 0.35);
+    box-shadow: 0 0 32px rgb(var(--tint-gold-intro) / 0.4);
   }
 </style>

@@ -83,6 +83,21 @@ New photos frame faces differently. Check the screenshots described under
 adjust the values above or the chapter focal points (`focus`, `narrowFocus`)
 in `src/pages/index.astro`.
 
+### Colors ("Luz de hadas" palette)
+
+All colors live in `src/styles/tokens.css`, sampled from the hero photo: dark
+warm `#3B2A27` (intro, chapter screens), cream `#FCF4EA` and peach `#F7E2D3`
+(panels), cocoa `#4E3423` (text), rosa profundo `#9A4A57` (name, buttons,
+links), moss `#5E6A3A` (WhatsApp button), gold `#D9A462` and coral `#EBA691`
+(decoration, sparkles, fairies). The particles and fairies repeat a few of
+them in `src/scripts/fairy-dust/` and `src/components/Fairies.astro`, and the
+browser bar color is the `theme-color` in `src/layouts/Base.astro`.
+
+Every text color must keep WCAG AA contrast (4.5:1, or 3:1 for large text):
+`e2e/palette.spec.ts` checks the token pairings. Text over photos depends on
+the photo and on the overlays (`--scrim-alpha`, `--veil-*`, `--halo-*`), so
+re-measure it after changing either.
+
 ## Checks
 
 | Command | What it verifies |

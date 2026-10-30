@@ -33,8 +33,8 @@ const { variant } = Astro.props;
     z-index: 0;
     height: var(--screen-height);
     overflow: hidden;
-    background: var(--color-forest);
-    color: var(--color-ivory);
+    background: var(--color-dark);
+    color: var(--color-cream);
   }
 
   .screen__shade {
@@ -44,7 +44,7 @@ const { variant } = Astro.props;
   }
 
   .screen--chapter .screen__shade {
-    background: linear-gradient(180deg, rgb(var(--tint-forest) / 0) 40%, rgb(var(--tint-forest) / 0.72) 100%);
+    background: linear-gradient(180deg, rgb(var(--tint-dark) / 0) 40%, rgb(var(--tint-dark) / 0.72) 100%);
   }
 
   .screen__copy {
@@ -55,7 +55,7 @@ const { variant } = Astro.props;
     z-index: 1;
     padding: 0 var(--gutter) 80px;
     text-align: center;
-    text-shadow: 0 1px 3px rgb(var(--tint-forest) / 0.35);
+    text-shadow: 0 1px 3px rgb(var(--tint-dark) / 0.35);
   }
 
   /*
@@ -69,9 +69,9 @@ const { variant } = Astro.props;
     z-index: -1;
     background: linear-gradient(
       180deg,
-      rgb(var(--tint-forest) / 0) 0,
-      rgb(var(--tint-forest) / var(--scrim-alpha)) var(--scrim-fade),
-      rgb(var(--tint-forest) / var(--scrim-alpha)) 100%
+      rgb(var(--tint-dark) / 0) 0,
+      rgb(var(--tint-dark) / var(--scrim-alpha)) var(--scrim-fade),
+      rgb(var(--tint-dark) / var(--scrim-alpha)) 100%
     );
     pointer-events: none;
   }

@@ -26,7 +26,7 @@ export type BurstShape = 'sparkle' | 'butterfly';
 
 export interface BurstParticle {
   shape: BurstShape;
-  /** V3 palette color. */
+  /** "Luz de hadas" palette color. */
   color: string;
   /** Radius in CSS px. */
   radius: number;
@@ -40,22 +40,23 @@ export interface BurstParticle {
   spin: number;
 }
 
-const GOLD = '#D8B76A';
+/** "Luz de hadas" palette (tokens.css): gold, light gold and light coral, where V3 had gold, light gold and pink. */
+const GOLD = '#D9A462';
 const LIGHT_GOLD = '#F3DFA6';
-const PINK = '#E7B8C0';
+const LIGHT_CORAL = '#F5CDBF';
 
 /** V3 keyframes fd1..fd10: end offset (px), diameter (px), color, rotation. */
 const V3_TRAJECTORIES: ReadonlyArray<{ shape: BurstShape; dx: number; dy: number; size: number; color: string; spin: number }> = [
   { shape: 'sparkle', dx: -64, dy: -58, size: 16, color: GOLD, spin: -40 },
   { shape: 'sparkle', dx: 0, dy: -88, size: 10, color: LIGHT_GOLD, spin: 30 },
   { shape: 'sparkle', dx: 62, dy: -62, size: 22, color: GOLD, spin: 45 },
-  { shape: 'sparkle', dx: 90, dy: -4, size: 10, color: PINK, spin: -30 },
+  { shape: 'sparkle', dx: 90, dy: -4, size: 10, color: LIGHT_CORAL, spin: -30 },
   { shape: 'sparkle', dx: 64, dy: 56, size: 16, color: LIGHT_GOLD, spin: 60 },
   { shape: 'sparkle', dx: 6, dy: 86, size: 10, color: GOLD, spin: -50 },
-  { shape: 'sparkle', dx: -60, dy: 60, size: 16, color: PINK, spin: 35 },
+  { shape: 'sparkle', dx: -60, dy: 60, size: 16, color: LIGHT_CORAL, spin: 35 },
   { shape: 'sparkle', dx: -92, dy: 6, size: 22, color: GOLD, spin: -60 },
-  { shape: 'butterfly', dx: -44, dy: -120, size: 20, color: PINK, spin: 8 },
-  { shape: 'butterfly', dx: 52, dy: -126, size: 20, color: PINK, spin: -8 },
+  { shape: 'butterfly', dx: -44, dy: -120, size: 20, color: LIGHT_CORAL, spin: 8 },
+  { shape: 'butterfly', dx: 52, dy: -126, size: 20, color: LIGHT_CORAL, spin: -8 },
 ];
 
 /**
@@ -74,7 +75,7 @@ export function buildBurst(scale = 1): BurstParticle[] {
   }));
 }
 
-const TRAIL_COLORS = [GOLD, LIGHT_GOLD, PINK];
+const TRAIL_COLORS = [GOLD, LIGHT_GOLD, LIGHT_CORAL];
 
 /**
  * One tiny sparkle dropped behind a flying fairy: it drifts down a little and

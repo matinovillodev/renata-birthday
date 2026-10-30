@@ -1,6 +1,6 @@
 ---
 /**
- * #el-gran-dia: sand sheet with day, time and place, then "Cómo llegar"
+ * #el-gran-dia: peach sheet with day, time and place, then "Cómo llegar"
  * (#como-llegar) with the embedded Google Map.
  */
 import { copy, event } from '../data/event';
@@ -20,7 +20,7 @@ const items = [
 ] as const;
 ---
 
-<section id="el-gran-dia" class="sheet sheet--sand details" aria-labelledby="el-gran-dia-title">
+<section id="el-gran-dia" class="sheet sheet--peach details" aria-labelledby="el-gran-dia-title">
   <h2 id="el-gran-dia-title" class="display sheet__title">{copy.details.heading}</h2>
 
   <dl class="details__list">
@@ -70,7 +70,7 @@ const items = [
 
   <div class="details__divider" aria-hidden="true">
     <span></span>
-    <StarIcon size={14} color="var(--color-gold-deep)" />
+    <StarIcon size={14} color="var(--color-gold)" />
     <span></span>
   </div>
 
@@ -111,7 +111,7 @@ const items = [
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--color-label);
+    color: var(--color-caramel);
   }
 
   .details__icon {
@@ -121,8 +121,8 @@ const items = [
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: var(--color-ivory);
-    color: var(--color-green);
+    background: var(--color-cream);
+    color: var(--color-accent);
   }
 
   .details__value {
@@ -144,14 +144,14 @@ const items = [
   .details__divider span {
     flex: 1 1 0;
     height: 1px;
-    background: var(--color-gold-deep);
+    background: var(--color-gold);
   }
 
   .details__map-title {
     margin-top: 28px;
     font-size: 32px;
     line-height: 1.2;
-    color: var(--color-green);
+    color: var(--color-cocoa);
   }
 
   /* Full-bleed: cancel the sheet's side gutter. Same gap as divider -> heading. */

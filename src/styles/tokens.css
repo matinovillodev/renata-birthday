@@ -1,38 +1,38 @@
 /*
- * Design tokens from the approved V3 "Inmersiva con parallax" artboard.
+ * Design tokens: layout and type from the approved V3 "Inmersiva con
+ * parallax" artboard, colors from the "Luz de hadas" palette (V4 artboard),
+ * sampled from the hero photo (haze, dress, coral flowers, caramel trunk).
  * Font families come from the Astro Fonts API (astro.config.mjs):
  * --font-display (Fraunces) and --font-body (Nunito).
+ *
+ * Contrast of every text pairing: e2e/palette.spec.ts (solid colors) and the
+ * screenshot measurements in odd/tasks/luz-de-hadas.md (text over photos).
  */
 :root {
-  /* Palette */
-  --color-ivory: #f6f1e7;
-  --color-sand: #ede4d3;
-  --color-green: #2f4a36;
-  --color-forest: #1e2a22;
-  --color-ink: #2c2a24;
-  --color-ink-muted: #5e5a4e; /* 6.1:1 on ivory */
-  --color-label: #4d5a45; /* 5.8:1 on sand */
-  --color-pink: #e7b8c0;
-  --color-pink-light: #f2c9cf; /* accent: the child's name */
-  --color-pink-dark: #d8a7b1;
-  --color-rose: #a35670; /* closing heading, 4.5:1 on ivory */
-  --color-gold: #d8b76a;
-  --color-gold-deep: #b8954a;
-  --color-gold-light: #f3dfa6;
-  --color-map-placeholder: #dcd2be;
-  --color-white: #fff;
-  /* "Luz de hadas" hero (bright photo): dark copy over a cream veil. */
-  --color-cream: #fcf4ea;
-  --color-cocoa: #4e3423;
-  --color-cocoa-muted: #75594a;
-  --color-caramel: #8a5a2e;
-  --color-accent: #9a4a57;
+  /* Palette "Luz de hadas" */
+  --color-dark: #3b2a27; /* dark warm: intro curtain, chapter screens, photo band */
+  --color-cream: #fcf4ea; /* panels, light text on dark (12.4:1 on dark) */
+  --color-peach: #f7e2d3; /* alternate panel */
+  --color-cocoa: #4e3423; /* headings and body text (10.5:1 on cream, 9.1:1 on peach) */
+  --color-cocoa-muted: #75594a; /* secondary text (5.9:1 on cream) */
+  --color-caramel: #8a5a2e; /* overlines and labels (4.7:1 on peach) */
+  --color-accent: #9a4a57; /* rosa profundo: name, call to action, icons, links (white text 6.0:1) */
   --color-accent-hover: #7a3844;
-  /* Dark tint used by photo overlays and shadows, as "R G B" for rgb(... / alpha). */
-  --tint-forest: 20 28 22;
-  /* Cream veil over the bright hero photo, as "R G B". */
+  --color-moss: #5e6a3a; /* WhatsApp button (white text 5.8:1) */
+  --color-gold: #d9a462; /* decor, active nav, focus ring */
+  --color-gold-intro: #e2b66c; /* intro star and eyebrow, on dark */
+  --color-gold-light: #f3dfa6; /* eyebrows, twinkles and fireflies on dark */
+  --color-coral: #eba691; /* particles, butterflies */
+  --color-coral-light: #f5cdbf; /* particles; the intro name on dark */
+  --color-map-placeholder: #eedcc6;
+  --color-white: #fff;
+  /* Tints as "R G B" for rgb(... / alpha): overlays, veils and shadows. */
+  --tint-dark: 59 42 39;
   --tint-cream: 252 244 234;
   --tint-accent: 154 74 87;
+  --tint-moss: 94 106 58;
+  --tint-gold: 217 164 98;
+  --tint-gold-intro: 226 182 108;
 
   /* Typography */
   --font-size-body: 18px;
@@ -51,16 +51,17 @@
   --radius-sheet: 32px;
   --radius-pill: 999px;
   --radius-thumb: 18px;
-  --shadow-sheet: 0 -24px 48px rgb(var(--tint-forest) / 0.25);
+  --shadow-sheet: 0 -24px 48px rgb(var(--tint-dark) / 0.22);
   --button-height: 56px;
   --tap-size: 44px;
 
   /*
-   * Scrim behind text that sits on photos: V3's gradients alone leave the
-   * light text at ~1.5:1 over the cream dress. This text-anchored scrim is
-   * the minimum found to keep it >= 4.5:1 (see the T2 handoff).
+   * Scrim behind the light chapter text that sits on photos: V3's gradients
+   * alone leave it at ~1.5:1 over bright areas. With the dark warm tint
+   * (lighter than V3's forest, which needed 0.65 in T2) this text-anchored
+   * scrim needs 0.75 to keep the small eyebrow >= 4.5:1 over white.
    */
-  --scrim-alpha: 0.65;
+  --scrim-alpha: 0.75;
   --scrim-fade: 96px;
   /*
    * Hero over the bright "Luz de hadas" photo (V4 artboard): cream veil
@@ -72,9 +73,13 @@
   --halo-alpha: 0.6;
   --halo-copy-alpha: 0.9;
 
-  /* Two-tone focus ring: visible on ivory/sand panels and on dark photos. */
-  --focus-inner: var(--color-gold-light);
-  --focus-outer: var(--color-green);
+  /*
+   * Two-tone focus ring: the gold of the palette inside, cocoa outside, so it
+   * keeps >= 3:1 on the cream and peach panels, the bright hero photo and the
+   * dark screens (gold alone is ~2:1 on cream).
+   */
+  --focus-inner: var(--color-gold);
+  --focus-outer: var(--color-cocoa);
 }
 
 @supports (height: 100svh) {

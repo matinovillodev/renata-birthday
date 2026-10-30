@@ -7,7 +7,7 @@
 }
 
 html {
-  background: var(--color-forest);
+  background: var(--color-dark);
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
@@ -15,8 +15,8 @@ html {
 
 body {
   margin: 0;
-  background: var(--color-forest);
-  color: var(--color-ink);
+  background: var(--color-dark);
+  color: var(--color-cocoa);
   font-family: var(--font-body);
   font-size: var(--font-size-body);
   line-height: var(--line-height-body);
@@ -37,11 +37,11 @@ p {
 }
 
 a {
-  color: var(--color-green);
+  color: var(--color-accent);
 }
 
 a:hover {
-  color: var(--color-forest);
+  color: var(--color-accent-hover);
 }
 
 :focus-visible {
@@ -84,7 +84,7 @@ html.lenis {
 
 /*
  * Rounded panel that scrolls over a sticky photo screen (V3 sections
- * #invitacion, #el-gran-dia and the RSVP panel).
+ * #invitacion, #el-gran-dia and the RSVP panel), in cream or peach.
  */
 .sheet {
   position: relative;
@@ -95,18 +95,18 @@ html.lenis {
   text-align: center;
 }
 
-.sheet--ivory {
-  background: var(--color-ivory);
+.sheet--cream {
+  background: var(--color-cream);
 }
 
-.sheet--sand {
-  background: var(--color-sand);
+.sheet--peach {
+  background: var(--color-peach);
 }
 
 .sheet__title {
   font-size: clamp(40px, 9vw, 72px);
   line-height: 1.05;
-  color: var(--color-green);
+  color: var(--color-cocoa);
 }
 
 /* Pill button / link. */
@@ -135,12 +135,12 @@ html.lenis {
 }
 
 .btn--light {
-  background: var(--color-ivory);
-  color: var(--color-forest);
+  background: var(--color-cream);
+  color: var(--color-dark);
 }
 
 .btn--light:hover {
-  color: var(--color-forest);
+  color: var(--color-dark);
 }
 
 /* Deep rose pill (hero call to action over the bright photo). */

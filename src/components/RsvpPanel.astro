@@ -15,11 +15,11 @@ interface Props {
 const { whatsappUrl } = Astro.props;
 ---
 
-<section class="sheet sheet--ivory rsvp" aria-labelledby="rsvp-title">
+<section class="sheet sheet--cream rsvp" aria-labelledby="rsvp-title">
   <div class="rsvp__stars" aria-hidden="true">
-    <StarIcon size={12} color="var(--color-gold-deep)" />
-    <StarIcon size={20} color="var(--color-gold-deep)" />
-    <StarIcon size={12} color="var(--color-gold-deep)" />
+    <StarIcon size={12} color="var(--color-gold)" />
+    <StarIcon size={20} color="var(--color-gold)" />
+    <StarIcon size={12} color="var(--color-gold)" />
   </div>
   <h2 id="rsvp-title" class="display sheet__title rsvp__title">{copy.rsvp.heading}</h2>
   <a class="btn rsvp__whatsapp" href={whatsappUrl} target="_blank" rel="noopener" data-rsvp-link>
@@ -55,9 +55,9 @@ const { whatsappUrl } = Astro.props;
   .rsvp__whatsapp {
     margin-top: 32px;
     padding: 0 30px;
-    background: var(--color-green);
+    background: var(--color-moss);
     color: var(--color-white);
-    box-shadow: 0 10px 24px rgb(47 74 54 / 0.28);
+    box-shadow: 0 10px 24px rgb(var(--tint-moss) / 0.28);
   }
 
   .rsvp__whatsapp:hover {

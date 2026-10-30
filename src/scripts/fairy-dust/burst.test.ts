@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { buildBurst, buildTrail, containerOptions, MAX_PARTICLES, toParticleOptions } from './burst';
 
-const V3_COLORS = ['#D8B76A', '#F3DFA6', '#E7B8C0'];
+/** "Luz de hadas" particle colors: gold, light gold and light coral. */
+const PALETTE = ['#D9A462', '#F3DFA6', '#F5CDBF'];
 
 describe('buildTrail', () => {
   const sequence = (values: number[]) => {
@@ -9,12 +10,12 @@ describe('buildTrail', () => {
     return () => values[index++ % values.length];
   };
 
-  it('drops one tiny V3 sparkle that drifts down and fades quickly', () => {
+  it('drops one tiny V3 sparkle in a palette color that drifts down and fades quickly', () => {
     const trail = buildTrail(sequence([0.5]));
     expect(trail).toHaveLength(1);
     const [sparkle] = trail;
     expect(sparkle.shape).toBe('sparkle');
-    expect(V3_COLORS).toContain(sparkle.color);
+    expect(PALETTE).toContain(sparkle.color);
     expect(sparkle.radius).toBeLessThanOrEqual(4);
     expect(sparkle.life).toBeGreaterThanOrEqual(0.5);
     expect(sparkle.life).toBeLessThanOrEqual(0.9);
@@ -39,8 +40,8 @@ describe('buildBurst', () => {
     expect(burst.filter((p) => p.shape === 'butterfly')).toHaveLength(2);
   });
 
-  it('uses only V3 gold and pink colors', () => {
-    for (const particle of buildBurst()) expect(V3_COLORS).toContain(particle.color);
+  it('uses only the palette gold and coral colors', () => {
+    for (const particle of buildBurst()) expect(PALETTE).toContain(particle.color);
   });
 
   it('keeps every lifetime between 1.1 and 1.6 seconds', () => {

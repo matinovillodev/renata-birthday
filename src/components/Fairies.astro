@@ -5,8 +5,9 @@
  * times, flies the clones and removes them. Decorative (`aria-hidden`), fixed
  * (no layout shift) and never takes pointer events.
  *
- * Original drawing: a small fairy with a pink dress, a gold-tipped wand and
- * translucent pink wings that flap (CSS, transform only).
+ * Original drawing: a small fairy with a coral dress, a gold-tipped wand and
+ * translucent coral wings that flap (CSS, transform only). Colors: the
+ * "Luz de hadas" palette (light coral, coral, gold, cream, light gold).
  */
 ---
 
@@ -21,9 +22,9 @@
             rx="10"
             ry="6.5"
             transform="rotate(-28 14 17)"
-            fill="#F2C9CF"
+            fill="#F5CDBF"
             fill-opacity="0.55"
-            stroke="#D8B76A"
+            stroke="#D9A462"
             stroke-opacity="0.8"
             stroke-width="0.6"></ellipse>
           <ellipse
@@ -32,9 +33,9 @@
             rx="6.5"
             ry="4"
             transform="rotate(24 16 27)"
-            fill="#E7B8C0"
+            fill="#EBA691"
             fill-opacity="0.5"
-            stroke="#D8B76A"
+            stroke="#D9A462"
             stroke-opacity="0.7"
             stroke-width="0.5"></ellipse>
         </g>
@@ -45,9 +46,9 @@
             rx="10"
             ry="6.5"
             transform="rotate(28 34 17)"
-            fill="#F2C9CF"
+            fill="#F5CDBF"
             fill-opacity="0.55"
-            stroke="#D8B76A"
+            stroke="#D9A462"
             stroke-opacity="0.8"
             stroke-width="0.6"></ellipse>
           <ellipse
@@ -56,19 +57,19 @@
             rx="6.5"
             ry="4"
             transform="rotate(-24 32 27)"
-            fill="#E7B8C0"
+            fill="#EBA691"
             fill-opacity="0.5"
-            stroke="#D8B76A"
+            stroke="#D9A462"
             stroke-opacity="0.7"
             stroke-width="0.5"></ellipse>
         </g>
-        <circle cx="24" cy="13.5" r="3.3" fill="#F6F1E7"></circle>
+        <circle cx="24" cy="13.5" r="3.3" fill="#FCF4EA"></circle>
         <path
           d="M24 16.5c-1.6 0-2.4 1.2-2.6 2.6L19 31.5c3.2 1.6 6.8 1.6 10 0l-2.4-12.4c-.2-1.4-1-2.6-2.6-2.6z"
-          fill="#E7B8C0"></path>
-        <path d="M21.6 21.5l-4 3.2M26.4 21.5l3.4-3.6M22.5 31.8v3.2M25.5 31.8v3.2" stroke="#F6F1E7" stroke-width="1.1" stroke-linecap="round" fill="none"
+          fill="#EBA691"></path>
+        <path d="M21.6 21.5l-4 3.2M26.4 21.5l3.4-3.6M22.5 31.8v3.2M25.5 31.8v3.2" stroke="#FCF4EA" stroke-width="1.1" stroke-linecap="round" fill="none"
         ></path>
-        <path d="M29.8 17.9l1.6-2.2" stroke="#D8B76A" stroke-width="0.9" stroke-linecap="round"></path>
+        <path d="M29.8 17.9l1.6-2.2" stroke="#D9A462" stroke-width="0.9" stroke-linecap="round"></path>
         <circle cx="31.8" cy="15.2" r="1.4" fill="#F3DFA6"></circle>
       </svg>
     </span>
@@ -93,7 +94,7 @@
     width: 44px;
     height: 44px;
     margin: -22px 0 0 -22px;
-    filter: drop-shadow(0 0 6px rgb(216 183 106 / 0.85));
+    filter: drop-shadow(0 0 6px rgb(var(--tint-gold) / 0.85));
     will-change: transform, opacity;
   }
 

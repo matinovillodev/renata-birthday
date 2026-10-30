@@ -29,18 +29,18 @@ const SPARKLE: Outline = {
   ],
 };
 
-/** V3 butterfly upper wings (filled with the particle color, #E7B8C0). */
+/** V3 butterfly upper wings (filled with the particle color, light coral #F5CDBF). */
 const UPPER_WINGS: readonly Outline[] = [
   { start: [0, 0], curves: [[[-3, -7], [-9, -8], [-9, -4]], [[-9, -1], [-5, 0], [0, 0]]] },
   { start: [0, 0], curves: [[[3, -7], [9, -8], [9, -4]], [[9, -1], [5, 0], [0, 0]]] },
 ];
 
-/** V3 butterfly lower wings, a darker pink (#D8A7B1). */
+/** V3 butterfly lower wings, in the palette's coral (#EBA691). */
 const LOWER_WINGS: readonly Outline[] = [
   { start: [0, 0], curves: [[[-3, 3], [-7, 7], [-5, 8]], [[-3, 9], [-1, 4], [0, 0]]] },
   { start: [0, 0], curves: [[[3, 3], [7, 7], [5, 8]], [[3, 9], [1, 4], [0, 0]]] },
 ];
-const LOWER_WING_RGB = '216, 167, 177';
+const LOWER_WING_RGB = '235, 166, 145';
 
 function trace(context: OffscreenCanvasRenderingContext2D, outline: Outline, scale: number): void {
   context.moveTo(outline.start[0] * scale, outline.start[1] * scale);
