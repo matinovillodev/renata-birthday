@@ -52,8 +52,14 @@ The 2026-10-30 design review (screenshots at 390×844 and 1440×900) found: ever
 
 - 2026-10-30: branch/worktree created from `87b1a03`.
 - 2026-10-30: venue location confirmed by the user — new place: https://maps.app.goo.gl/E9QZ5DrBoGMBTAQG8 → Google "Centro de Jubilados y Pensionados 12 de Mayo - Jorge Newbery", -31.352343, -64.1810758. Display name stays "Centro de Jubilados 12 de Mayo".
-- Commits: H1 `5406393`, H2 `7e4b915`, H3 `cd95d44`, H4+H6 `624e6d1`, `2885d98` (style: literal no-break spaces in the source spelled as ` `; the edit tool had turned the escapes into invisible characters), H5 `3a35b4b`.
+- Commits: H1 `5406393`, H2 `7e4b915`, H3 `cd95d44`, H4+H6 `624e6d1`, `2885d98` (style: literal no-break spaces in the source spelled as ` `; the edit tool had turned the escapes into invisible characters), H5 `3a35b4b`, H7 `c84710f`, H8 `349435f`.
+- Final checks on `349435f`: `npm test` 66/66 (9 files); `npx astro check` 0 errors / 0 warnings / 0 hints; `npm run build` ok; `npm run test:e2e` 205 passed / 53 skipped / 0 failed (first run, no retries; port 4322 checked free before).
+- Face clearance (min gap face → hero copy, px, motion / reduced): 360×640 47/40, 390×844 70/61, 768×1024 30/33, 1024×768 168/160, 1280×800 280/269, 1440×900 342/329; guards 375×667 45/39, 360×780 62/52, 412×915 62/57, 820×1180 26/33, 844×390 163/155.
+- Contrast over photos (worst of 6 viewports × motion/reduced, 5th/95th percentile of the pixels behind the hidden text): intro lead-in 5.85, intro name 7.29; hero lead-in 4.83, name 4.93 (large), date 9.49, hint 5.21; chapter titles 8.52 and 8.69 (large). Solid pairings: `e2e/palette.spec.ts` (green).
+- Weight: mobile load 520,080 B (budget 903,922 B); initial JS 53,092 B gzip (budget 60 KB).
+- Screenshots reviewed (reduced motion, opened invitation, every section) at 360×640, 390×844, 768×1024, 1440×900.
+- Open: `requirement.md` (outside the edit surface) still lists the old Maps link; the Engram mirror of this document is the parent's to sync; RDD assessments per commit not run by the writer.
 
 ## Next step
 
-H1–H8 (delegated writer).
+Parent: RDD assess over `87b1a03..349435f` (committed-only), spot-check, visual review with the user.
