@@ -43,8 +43,8 @@ describe('event data', () => {
       'El sábado 28 de noviembre, a las 13:30, en el Centro de Jubilados 12 de Mayo.',
     );
     // A line may only break between phrases, never inside "a las 13:30".
-    expect(copy.details.sentence(date)).toContain('a las 13:30');
-    expect(copy.details.sentence(date)).toContain('en el Centro');
+    expect(copy.details.sentence(date)).toContain('a\u00A0las\u00A013:30');
+    expect(copy.details.sentence(date)).toContain('en\u00A0el\u00A0Centro');
   });
 
   it('continues the hero lead-in and name with the date', () => {

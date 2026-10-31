@@ -1,4 +1,4 @@
-const NO_BREAK_SPACE = ' ';
+const NO_BREAK_SPACE = '\u00A0';
 
 /**
  * Joins the words of a short phrase with no-break spaces, so a line never

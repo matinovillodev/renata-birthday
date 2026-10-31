@@ -153,7 +153,7 @@ export const copy = {
   /** Peach sheet: day, time and place as one sentence (also the section heading). */
   details: {
     // "en el" travels with the venue's first word, so it never ends a line.
-    sentence: (date: EventDatePhrases) => `${when(date, 'El')}, ${keepTogether('en el')} ${venueName}.`,
+    sentence: (date: EventDatePhrases) => `${when(date, 'El')}, ${keepTogether('en el')}\u00A0${venueName}.`,
   },
 
   /** "How to get there" heading above the embedded map. */

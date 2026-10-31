@@ -19,7 +19,7 @@ test('a date phrase ("28 de noviembre", "a las 13:30") never splits across lines
         const node = [...element.childNodes].find((child) => child.nodeType === Node.TEXT_NODE);
         const text = node?.textContent ?? '';
         return wanted.map((phrase) => {
-          const index = text.replaceAll(' ', ' ').indexOf(phrase);
+          const index = text.replaceAll('\u00A0', ' ').indexOf(phrase);
           if (!node || index < 0) return { phrase, lines: 0 };
           const range = document.createRange();
           range.setStart(node, index);
