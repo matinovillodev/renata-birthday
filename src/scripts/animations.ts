@@ -1,6 +1,8 @@
 /**
- * V3 motion with GSAP + ScrollTrigger: intro entrance and opening, staggered
- * hero text, photo parallax, floating chapter titles and sheet reveals. Everything is created inside `gsap.matchMedia()` for
+ * V3 motion with GSAP + ScrollTrigger: intro entrance and opening (with the
+ * hero text rising in), photo parallax and floating chapter titles. The
+ * opening is the page's one orchestrated moment: panels have no entrance
+ * animations (H7). Everything is created inside `gsap.matchMedia()` for
  * "no-preference" motion, so it is reverted (inline styles removed, triggers
  * killed) as soon as the guest asks for reduced motion.
  *
@@ -107,19 +109,6 @@ function setupFloatingText(): void {
   }
 }
 
-/** Not in V3: sheet content eases in once as it enters the viewport. */
-function setupSheetReveals(): void {
-  for (const block of gsap.utils.toArray<HTMLElement>('.sheet > *')) {
-    gsap.from(block, {
-      opacity: 0,
-      y: 24,
-      duration: 0.8,
-      ease: 'power2.out',
-      scrollTrigger: { trigger: block, start: 'top 90%', once: true },
-    });
-  }
-}
-
 export function initMotion(): Motion {
   let current: Motion = still;
   const root = document.documentElement;
@@ -131,7 +120,6 @@ export function initMotion(): Motion {
 
     setupPhotoParallax(wide);
     setupFloatingText();
-    setupSheetReveals();
 
     const heroItems = gsap.utils.toArray<HTMLElement>('[data-rise] > *');
     if (root.classList.contains('intro')) {

@@ -3,8 +3,7 @@
  * Sticky full-screen photo with text anchored to the bottom (V3 "scr").
  * The next sibling sheet scrolls over it.
  *
- * Slots: `photo` (an ArtDirectedPhoto), `decor` (decorative overlays such as
- * twinkles) and the default slot (the text block).
+ * Slots: `photo` (an ArtDirectedPhoto) and the default slot (the text block).
  *
  * T3 hooks: `data-screen` on the sticky box, `data-parallax="float"` on the
  * text block (V3 moves it up and fades it while scrolling).
@@ -20,7 +19,6 @@ const { variant } = Astro.props;
 <div class:list={['screen', `screen--${variant}`]} data-screen>
   <slot name="photo" />
   <div class="screen__shade" aria-hidden="true"></div>
-  <slot name="decor" />
   <div class="screen__copy" data-parallax="float">
     <slot />
   </div>

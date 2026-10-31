@@ -112,6 +112,14 @@ Every text color must keep WCAG AA contrast (4.5:1, or 3:1 for large text):
 the photo and on the overlays (`--scrim-alpha`, `--veil-*`, `--halo-*`), so
 re-measure it after changing either.
 
+### Motion
+
+Opening the invitation is the one orchestrated moment: the curtain lifts,
+three fairies fly out and the hero text rises in. After that only the photo
+parallax (while scrolling) and the fairy dust (on tap) move; panels have no
+entrance animations and there are no ambient twinkles (`src/scripts/animations.ts`).
+With reduced motion nothing moves and everything is visible at once.
+
 ## Checks
 
 | Command | What it verifies |

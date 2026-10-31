@@ -62,6 +62,23 @@ test.describe('with motion allowed', () => {
       .not.toBe('none');
   });
 
+  test('the opening is the one orchestrated moment: no section entrances, no ambient twinkles', async ({ page }) => {
+    await page.goto('/');
+    await openInvitation(page);
+
+    await expect(page.locator('[data-twinkle]')).toHaveCount(0);
+    // Every panel's content is already in place before it scrolls into view.
+    const animated = await page.locator('.sheet > *').evaluateAll((elements) =>
+      elements
+        .filter((el) => {
+          const style = getComputedStyle(el);
+          return style.opacity !== '1' || style.transform !== 'none';
+        })
+        .map((el) => el.textContent?.trim().slice(0, 40) || el.className),
+    );
+    expect(animated).toEqual([]);
+  });
+
   test('a tap creates the fairy-dust canvas', async ({ page }, testInfo) => {
     await page.goto('/');
     await openInvitation(page);
