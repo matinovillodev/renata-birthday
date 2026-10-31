@@ -19,14 +19,14 @@ Everything a host would change lives in **one file**: `src/data/event.ts`.
 | Field | What it does |
 | --- | --- |
 | `childName` | Name in the headings, the intro and the WhatsApp message. |
-| `startsAt` | Date and time as ISO 8601 **with offset**, e.g. `2026-11-28T13:30:00-03:00`. The page writes it into sentences: "el sábado 28 de noviembre, a las 13:30" under the name, and "El sábado 28 de noviembre, a las 13:30, en el Centro de Jubilados 12 de Mayo." in the details (no year). |
+| `startsAt` | Date and time as ISO 8601 **with offset**, e.g. `2026-11-28T13:30:00-03:00`. Under the name it reads "el sábado 28 de noviembre, a las 13:30"; the details items show "Sábado 28 de noviembre" (Día) and "13:30 hs" (Hora); the link preview says "El sábado 28 de noviembre, a las 13:30, en el Centro de Jubilados 12 de Mayo." (no year). |
 | `timeZone` | IANA zone used to display `startsAt`, e.g. `America/Argentina/Cordoba`. |
-| `venue.name` | Venue in the details sentence, the map and the link preview. The sentence says "en el …", so write a name that takes "el". |
+| `venue.name` | Venue in the details item "Lugar", the map and the link preview. The preview sentence says "en el …", so write a name that takes "el". |
 | `venue.mapEmbedUrl` | `src` of the Google Map loaded on request (see below). |
 | `venue.mapsShareUrl` | Short Google Maps link behind "Abrir en Google Maps". |
 | `whatsapp.digits` | Number for the RSVP link: country code + area code + number, digits only (`5493517622809`). |
 | `rsvp.message` | Text pre-filled in WhatsApp. Keep the blanks for name and number of people. |
-| `copy` | Every visible Spanish text, in page order. Texts with the name, date or venue are built from the fields above. Written like a printed card: sentence case, no all-caps labels, facts in sentences; each date phrase stays on one line. |
+| `copy` | Every visible Spanish text, in page order. Texts with the name, date or venue are built from the fields above. Written like a printed card: sentence case, no labels above headings; the details panel lists day, time and place as items. Each date phrase stays on one line. |
 
 Reference fields (not shown on the page):
 

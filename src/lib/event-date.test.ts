@@ -4,11 +4,13 @@ import { formatEventDate } from './event-date';
 const CORDOBA = 'America/Argentina/Cordoba';
 
 describe('formatEventDate', () => {
-  it('returns the phrases the invitation sentence is written with', () => {
+  it('returns the hero phrases and the labels of the details items', () => {
     expect(formatEventDate('2026-11-28T13:30:00-03:00', CORDOBA)).toEqual({
       weekday: 'sábado',
       date: '28 de noviembre',
       time: 'a las 13:30',
+      dayLabel: 'Sábado 28 de noviembre',
+      timeLabel: '13:30 hs',
     });
   });
 
@@ -18,12 +20,18 @@ describe('formatEventDate', () => {
       weekday: 'domingo',
       date: '29 de noviembre',
       time: 'a las 2:30',
+      dayLabel: 'Domingo 29 de noviembre',
+      timeLabel: '02:30 hs',
     });
   });
 
   it('uses a 24-hour clock without a leading zero on the hour', () => {
     expect(formatEventDate('2026-11-28T09:05:00-03:00', CORDOBA).time).toBe('a las 9:05');
     expect(formatEventDate('2026-11-28T18:00:00-03:00', CORDOBA).time).toBe('a las 18:00');
+  });
+
+  it('keeps the two-digit hour in the details time label', () => {
+    expect(formatEventDate('2026-11-28T09:05:00-03:00', CORDOBA).timeLabel).toBe('09:05 hs');
   });
 
   it('says "a la" for one o\'clock, as Spanish does', () => {

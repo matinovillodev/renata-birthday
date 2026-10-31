@@ -98,7 +98,8 @@ function when(date: EventDatePhrases, article: 'el' | 'El'): string {
 
 /**
  * Visible copy, grouped in page order. Written like a printed invitation:
- * sentence case, no labels above headings, facts in sentences.
+ * sentence case and no labels above headings; the details panel lists day,
+ * time and place as items (user decision, H10).
  *
  * Register note: V3 contains two voseo imperatives, kept verbatim and marked
  * with `REGISTER:` below until the neutral-Spanish wording is decided.
@@ -150,11 +151,22 @@ export const copy = {
     title: 'El gran día',
   },
 
-  /** Peach sheet: day, time and place as one sentence (also the section heading). */
+  /**
+   * Peach sheet: day, time and place as items (icon, label, value). The values
+   * come from `event` (`dayLabel`, `timeLabel`, `venue.name`).
+   */
   details: {
-    // "en el" travels with the venue's first word, so it never ends a line.
-    sentence: (date: EventDatePhrases) => `${when(date, 'El')}, ${keepTogether('en el')}\u00A0${venueName}.`,
+    dayLabel: 'Día',
+    timeLabel: 'Hora',
+    placeLabel: 'Lugar',
   },
+
+  /**
+   * The facts as one sentence, for the link preview (meta description):
+   * "El sábado 28 de noviembre, a las 13:30, en el Centro de Jubilados 12 de Mayo."
+   * "en el" travels with the venue's first word, so it never ends a line.
+   */
+  factsSentence: (date: EventDatePhrases) => `${when(date, 'El')}, ${keepTogether('en el')}\u00A0${venueName}.`,
 
   /**
    * "How to get there": an illustrated preview of the venue (no Google
@@ -182,7 +194,7 @@ export const copy = {
     button: 'Confirmar por WhatsApp',
   },
 
-  /** Closing footer: only the farewell (the facts are already in the details sentence). */
+  /** Closing footer: only the farewell (the facts are already in the details panel). */
   closing: {
     heading: '¡Te esperamos!',
   },

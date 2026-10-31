@@ -1,24 +1,79 @@
 ---
 /**
- * #el-gran-dia: peach sheet that says the day, time and place in one
- * sentence (built from `event`, also the section heading), then "Cómo llegar"
- * (#como-llegar) with the map preview (VenueMap.astro).
+ * #el-gran-dia: peach sheet with day, time and place as items (icon in a
+ * circle, label, value), then "Cómo llegar" (#como-llegar) with the map
+ * preview (VenueMap.astro). Values come from `event`.
+ *
+ * There is no visible heading (user decision, H10): the chapter title "El gran
+ * día" sits right above this panel, so the section is named by a visually
+ * hidden heading with that same title.
  */
-import { copy } from '../data/event';
+import { copy, event } from '../data/event';
 import type { EventDatePhrases } from '../lib/event-date';
 import StarIcon from './StarIcon.astro';
 import VenueMap from './VenueMap.astro';
 
 interface Props {
-  /** Date phrases derived from the event data. */
+  /** Date phrases and labels derived from the event data. */
   date: EventDatePhrases;
 }
 
 const { date } = Astro.props;
+
+const items = [
+  { icon: 'calendar', label: copy.details.dayLabel, value: date.dayLabel },
+  { icon: 'clock', label: copy.details.timeLabel, value: date.timeLabel },
+  { icon: 'pin', label: copy.details.placeLabel, value: event.venue.name },
+] as const;
 ---
 
 <section id="el-gran-dia" class="sheet sheet--peach details" aria-labelledby="el-gran-dia-title">
-  <h2 id="el-gran-dia-title" class="display details__sentence">{copy.details.sentence(date)}</h2>
+  <h2 id="el-gran-dia-title" class="visually-hidden">{copy.chapterDay.title}</h2>
+
+  <dl class="details__list">
+    {
+      items.map((item) => (
+        <div class="details__item">
+          <dt class="details__label">
+            <span class="details__icon" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                width="26"
+                height="26"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                focusable="false"
+              >
+                {item.icon === 'calendar' && (
+                  <>
+                    <rect x="3" y="5" width="18" height="16" rx="3" />
+                    <path d="M3 10h18M8 3v4M16 3v4" />
+                  </>
+                )}
+                {item.icon === 'clock' && (
+                  <>
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M12 7v5l3 2" />
+                  </>
+                )}
+                {item.icon === 'pin' && (
+                  <>
+                    <path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" />
+                    <circle cx="12" cy="9.5" r="2.5" />
+                  </>
+                )}
+              </svg>
+            </span>
+            {item.label}
+          </dt>
+          <dd class="details__value">{item.value}</dd>
+        </div>
+      ))
+    }
+  </dl>
 
   <div class="details__divider" aria-hidden="true">
     <span></span>
@@ -31,18 +86,54 @@ const { date } = Astro.props;
 </section>
 
 <style>
-  /*
-   * The facts as a sentence set like the body of a printed card: Fraunces at
-   * reading-display size, balanced lines that break only between phrases.
-   */
-  .details__sentence {
-    max-width: 16em;
+  /* First thing in the panel (no heading above it), so no top margin. */
+  .details__list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 36px 32px;
+    max-width: 960px;
     margin: 0 auto;
-    font-size: clamp(30px, 7.4vw, 54px);
-    font-weight: 400;
-    line-height: 1.2;
+  }
+
+  .details__item {
+    display: flex;
+    flex: 1 1 240px;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .details__label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-caramel);
+  }
+
+  .details__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--color-cream);
+    color: var(--color-accent);
+  }
+
+  .details__value {
+    margin: 0;
+    font-size: 21px;
+    font-weight: 600;
+    line-height: 1.35;
+    /* A long venue wraps into even lines ("Centro de Jubilados / 12 de Mayo"), never a lone word. */
     text-wrap: balance;
-    color: var(--color-cocoa);
   }
 
   .details__divider {

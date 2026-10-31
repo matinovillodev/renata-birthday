@@ -11,10 +11,13 @@ test.beforeEach(async ({ page }) => {
   await openInvitation(page);
 });
 
-test('says the date, time and venue in one sentence built from the event data', async ({ page }) => {
-  const sentence = page.getByRole('heading', { level: 2, name: plainSpaces(copy.details.sentence(date)) });
-  await expect(sentence).toBeVisible();
-  await expect(sentence).toHaveText('El sábado 28 de noviembre, a las 13:30, en el Centro de Jubilados 12 de Mayo.');
+test('lists the day, time and venue from the event data, and the hero repeats the date', async ({ page }) => {
+  const values = page.locator('#el-gran-dia dd');
+  await expect(values).toHaveText(['Sábado 28 de noviembre', '13:30 hs', 'Centro de Jubilados 12 de Mayo']);
+  await expect(values).toHaveText([date.dayLabel, date.timeLabel, event.venue.name]);
+  await expect(page.locator('#el-gran-dia dt')).toHaveText([copy.details.dayLabel, copy.details.timeLabel, copy.details.placeLabel], {
+    ignoreCase: true,
+  });
   await expect(page.locator('[data-rise]')).toContainText(plainSpaces(copy.hero.when(date)));
 });
 
@@ -28,6 +31,8 @@ test('says each thing once: no repeated farewell, no date in the closing', async
 test('shows no tracked all-caps labels or middle-dot meta strings', async ({ page }) => {
   const labels = await page.locator('body *').evaluateAll((elements) =>
     elements
+      // The details item labels (Día / Hora / Lugar) are small caps again by user decision (H10).
+      .filter((el) => !el.closest('#el-gran-dia dt'))
       .filter((el) => el.checkVisibility() && [...el.childNodes].some((node) => node.nodeType === Node.TEXT_NODE && node.textContent?.trim()))
       .filter((el) => {
         const style = getComputedStyle(el);

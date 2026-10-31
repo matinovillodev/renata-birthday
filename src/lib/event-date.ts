@@ -1,6 +1,7 @@
 /**
- * The event start as the phrases the invitation sentence is written with:
- * "El sábado 28 de noviembre, a las 13:30, en el …".
+ * The event start, written two ways: as phrases for the hero sentence ("el
+ * sábado 28 de noviembre, a las 13:30") and as the labels of the details
+ * items ("Sábado 28 de noviembre", "13:30 hs").
  */
 export interface EventDatePhrases {
   /** Lowercase weekday, e.g. `sábado`. */
@@ -9,12 +10,16 @@ export interface EventDatePhrases {
   date: string;
   /** 24-hour time introduced as Spanish does, e.g. `a las 13:30` (`a la 1:15` at one o'clock). */
   time: string;
+  /** Details item "Día": capitalized weekday, day and month, e.g. `Sábado 28 de noviembre`. */
+  dayLabel: string;
+  /** Details item "Hora": two-digit 24-hour time followed by `hs`, e.g. `13:30 hs`. */
+  timeLabel: string;
 }
 
 const LOCALE = 'es-AR';
 
 /**
- * Formats an ISO 8601 date-time into the phrases of the invitation, evaluated
+ * Formats an ISO 8601 date-time into the phrases and labels of the invitation, evaluated
  * in `timeZone` so the output never depends on the machine that builds the
  * site.
  *
@@ -35,11 +40,15 @@ export function formatEventDate(iso: string, timeZone: string): EventDatePhrases
   const time = formatParts(date, timeZone, { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
   // Intl pads the hour ("09"); a written invitation says "a las 9:05".
   const hour = Number(pick(time, 'hour'));
+  const weekday = pick(day, 'weekday');
+  const dayAndMonth = `${pick(day, 'day')} de ${pick(day, 'month')}`;
 
   return {
-    weekday: pick(day, 'weekday').toLocaleLowerCase(LOCALE),
-    date: `${pick(day, 'day')} de ${pick(day, 'month')}`,
+    weekday: weekday.toLocaleLowerCase(LOCALE),
+    date: dayAndMonth,
     time: `${hour === 1 ? 'a la' : 'a las'} ${hour}:${pick(time, 'minute')}`,
+    dayLabel: `${weekday.charAt(0).toLocaleUpperCase(LOCALE)}${weekday.slice(1)} ${dayAndMonth}`,
+    timeLabel: `${pick(time, 'hour')}:${pick(time, 'minute')} hs`,
   };
 }
 

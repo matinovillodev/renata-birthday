@@ -12,7 +12,7 @@ test('a date phrase ("28 de noviembre", "a las 13:30") never splits across lines
   await page.evaluate(() => document.fonts.ready);
 
   const phrases = [date.date, date.time];
-  const report = await page.locator('#inicio .hero__date, #el-gran-dia h2').evaluateAll(
+  const report = await page.locator('#inicio .hero__date').evaluateAll(
     (elements, wanted) =>
       elements.flatMap((element) => {
         // The text uses no-break spaces inside each phrase; compare with plain spaces.
@@ -31,7 +31,7 @@ test('a date phrase ("28 de noviembre", "a las 13:30") never splits across lines
     phrases,
   );
 
-  expect(report).toHaveLength(4);
+  expect(report).toHaveLength(2);
   for (const { phrase, lines } of report) expect(lines, `"${phrase}" on a single line`).toBe(1);
 });
 

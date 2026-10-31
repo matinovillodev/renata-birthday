@@ -34,17 +34,19 @@ describe('event data', () => {
       weekday: 'sábado',
       date: '28 de noviembre',
       time: 'a las 13:30',
+      dayLabel: 'Sábado 28 de noviembre',
+      timeLabel: '13:30 hs',
     });
   });
 
-  it('writes the details as one invitation sentence built from the data', () => {
+  it('writes the facts as one sentence for the link preview, built from the data', () => {
     const date = formatEventDate(event.startsAt, event.timeZone);
-    expect(plainSpaces(copy.details.sentence(date))).toBe(
+    expect(plainSpaces(copy.factsSentence(date))).toBe(
       'El sábado 28 de noviembre, a las 13:30, en el Centro de Jubilados 12 de Mayo.',
     );
     // A line may only break between phrases, never inside "a las 13:30".
-    expect(copy.details.sentence(date)).toContain('a\u00A0las\u00A013:30');
-    expect(copy.details.sentence(date)).toContain('en\u00A0el\u00A0Centro');
+    expect(copy.factsSentence(date)).toContain('a\u00A0las\u00A013:30');
+    expect(copy.factsSentence(date)).toContain('en\u00A0el\u00A0Centro');
   });
 
   it('continues the hero lead-in and name with the date', () => {

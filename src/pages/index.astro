@@ -29,7 +29,7 @@ import Base from '../layouts/Base.astro';
 
 const date = formatEventDate(event.startsAt, event.timeZone);
 // Link previews read the invitation as one sentence, like the page.
-const description = plainSpaces(`${copy.hero.leadIn} ${event.childName}. ${copy.details.sentence(date)}`);
+const description = plainSpaces(`${copy.hero.leadIn} ${event.childName}. ${copy.factsSentence(date)}`);
 const whatsappUrl = buildWhatsAppUrl(event.whatsapp.digits, event.rsvp.message);
 
 // Social preview: 1200x630 crop of the hero photo (1672x941, downscaled only),
