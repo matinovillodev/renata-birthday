@@ -97,7 +97,9 @@ function when(date: EventDatePhrases, article: 'el' | 'El'): string {
 }
 
 /**
- * Visible copy, grouped in page order. Written like a printed invitation:
+ * Visible copy, grouped in page order, in Renata's voice (first person: "Te
+ * invito a mi primer cumpleaños"); alt texts describe the photos in third
+ * person and the WhatsApp message is the guest's. Written like a printed invitation:
  * sentence case and no labels above headings; the details panel lists day,
  * time and place as items (user decision, H10).
  *
@@ -123,15 +125,15 @@ export const copy = {
   /** Full-screen opening curtain shown before the invitation. */
   intro: {
     /** Italic line above the name. */
-    leadIn: 'Primer cumpleaños',
+    leadIn: 'Mi primer cumpleaños',
     name: childName,
     openButton: 'Abrir invitación',
   },
 
-  /** Chapter I: full-bleed hero photo. The lead-in, the name and the date read as one sentence. */
+  /** Chapter I: full-bleed hero photo. The lead-in, then the name, then the date line. */
   hero: {
     photoAlt: `${childName} vestida de hada, sonriendo`,
-    leadIn: 'Te invitamos al primer cumpleaños de',
+    leadIn: 'Te invito a mi primer cumpleaños',
     name: childName,
     when: (date: EventDatePhrases) => when(date, 'el'),
     rsvpButton: 'Confirmar asistencia',
@@ -142,7 +144,7 @@ export const copy = {
   /** Ivory sheet that slides over the hero. */
   invitation: {
     heading: 'Un año lleno de magia',
-    body: `${childName} está por cumplir su primer añito y queremos celebrarlo rodeados de las personas que la acompañan con tanto cariño. ¡Nos encantaría que seas parte de este día tan especial!`,
+    body: 'Estoy por cumplir mi primer añito y quiero celebrarlo rodeada de las personas que me acompañan con tanto cariño. ¡Me encantaría que seas parte de este día tan especial!',
   },
 
   /** Chapter II photo title. */
@@ -184,7 +186,7 @@ export const copy = {
   /** Chapter III photo title. */
   chapterRsvp: {
     photoAlt: `${childName} sentada entre hongos de cuento, mirando hacia arriba`,
-    title: '¿Nos acompañan?',
+    title: '¿Me acompañan?',
   },
 
   /** WhatsApp RSVP block. The page never claims the RSVP was sent. */
@@ -196,6 +198,6 @@ export const copy = {
 
   /** Closing footer: only the farewell (the facts are already in the details panel). */
   closing: {
-    heading: '¡Te esperamos!',
+    heading: '¡Te espero!',
   },
 } as const;

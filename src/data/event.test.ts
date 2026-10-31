@@ -49,11 +49,24 @@ describe('event data', () => {
     expect(copy.factsSentence(date)).toContain('en\u00A0el\u00A0Centro');
   });
 
-  it('continues the hero lead-in and name with the date', () => {
+  it('shows the hero lead-in, then the name, then the date line', () => {
     const date = formatEventDate(event.startsAt, event.timeZone);
-    expect(plainSpaces(`${copy.hero.leadIn} ${copy.hero.name} ${copy.hero.when(date)}`)).toBe(
-      'Te invitamos al primer cumpleaños de Renata el sábado 28 de noviembre, a las 13:30',
+    expect(copy.hero.leadIn).toBe('Te invito a mi primer cumpleaños');
+    expect(copy.hero.name).toBe('Renata');
+    expect(plainSpaces(copy.hero.when(date))).toBe('el sábado 28 de noviembre, a las 13:30');
+  });
+
+  it('speaks in Renata\'s voice (first person) on the page', () => {
+    expect(copy.intro.leadIn).toBe('Mi primer cumpleaños');
+    expect(copy.invitation.body).toBe(
+      'Estoy por cumplir mi primer añito y quiero celebrarlo rodeada de las personas que me acompañan con tanto cariño. ¡Me encantaría que seas parte de este día tan especial!',
     );
+    expect(copy.chapterRsvp.title).toBe('¿Me acompañan?');
+    expect(copy.closing.heading).toBe('¡Te espero!');
+    // No family "we" left in the visible copy (alt texts describe the photos in third person).
+    const { hero, chapterDay, chapterRsvp, ...visible } = copy;
+    const spoken = JSON.stringify([visible, hero.leadIn, chapterDay.title, chapterRsvp.title]);
+    expect(spoken).not.toMatch(/\b(invitamos|queremos|esperamos|Nos encantaría|Nos acompañan)\b/);
   });
 
   it('writes no tracked-caps labels or middle-dot strings in the copy', () => {

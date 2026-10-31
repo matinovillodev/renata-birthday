@@ -19,7 +19,7 @@ Everything a host would change lives in **one file**: `src/data/event.ts`.
 | Field | What it does |
 | --- | --- |
 | `childName` | Name in the headings, the intro and the WhatsApp message. |
-| `startsAt` | Date and time as ISO 8601 **with offset**, e.g. `2026-11-28T13:30:00-03:00`. Under the name it reads "el sábado 28 de noviembre, a las 13:30"; the details items show "Sábado 28 de noviembre" (Día) and "13:30 hs" (Hora); the link preview says "El sábado 28 de noviembre, a las 13:30, en el Centro de Jubilados 12 de Mayo." (no year). |
+| `startsAt` | Date and time as ISO 8601 **with offset**, e.g. `2026-11-28T13:30:00-03:00`. Under the name it reads "el sábado 28 de noviembre, a las 13:30"; the details items show "Sábado 28 de noviembre" (Día) and "13:30 hs" (Hora); the link preview says "Te invito a mi primer cumpleaños. El sábado 28 de noviembre, a las 13:30, en el Centro de Jubilados 12 de Mayo." (no year). |
 | `timeZone` | IANA zone used to display `startsAt`, e.g. `America/Argentina/Cordoba`. |
 | `venue.name` | Venue in the details item "Lugar", the map and the link preview. The preview sentence says "en el …", so write a name that takes "el". |
 | `venue.mapEmbedUrl` | `src` of the Google Map loaded on request (see below). |
@@ -64,7 +64,7 @@ Replace the files **keeping their names**:
 | --- | --- |
 | `hero-fairy.jpg` | Hero ("Luz de hadas") on every screen, also blurred behind the "Abrir invitación" curtain; link preview image. |
 | `band-landscape.jpg` | Chapter "El gran día". |
-| `closing-landscape.jpg` | Chapter "¿Nos acompañan?". |
+| `closing-landscape.jpg` | Chapter "¿Me acompañan?". |
 
 Each photo appears once (an e2e test checks it), so every image a guest sees
 is new.

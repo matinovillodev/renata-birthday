@@ -22,7 +22,7 @@ test('lists the day, time and venue from the event data, and the hero repeats th
 });
 
 test('says each thing once: no repeated farewell, no date in the closing', async ({ page }) => {
-  await expect(page.getByText(/te esperamos/i)).toHaveCount(1);
+  await expect(page.getByText(copy.closing.heading)).toHaveCount(1);
   const footer = page.locator('footer');
   await expect(footer).toHaveText(copy.closing.heading);
   await expect(footer).not.toContainText(date.time);
