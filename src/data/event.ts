@@ -156,10 +156,16 @@ export const copy = {
     sentence: (date: EventDatePhrases) => `${when(date, 'El')}, ${keepTogether('en el')}\u00A0${venueName}.`,
   },
 
-  /** "How to get there" heading above the embedded map. */
+  /**
+   * "How to get there": an illustrated preview of the venue (no Google
+   * request) with a link to Google Maps and a button that loads the
+   * interactive map in its place.
+   */
   map: {
     heading: 'Cómo llegar',
-    /** Accessible name of the map iframe (not visible; not in V3, which only had a mock map). */
+    openInMaps: 'Abrir en Google Maps',
+    loadMap: 'Ver el mapa interactivo',
+    /** Accessible name of the map iframe once it is loaded. */
     iframeTitle: `Mapa de ubicación del ${venueName}`,
   },
 

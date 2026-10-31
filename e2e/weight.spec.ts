@@ -6,8 +6,8 @@ import { expect, test } from './fixtures';
 /**
  * Page-weight budgets, measured on the `mobile` project (390x844 @3x).
  * Bytes are what the browser transferred until the `load` event, from a cold
- * cache, before any interaction. The map iframe is lazy (and stubbed here),
- * the particle engine loads on demand. Budgets keep ~20% headroom over the
+ * cache, before any interaction. The Google map loads only when a guest asks
+ * (H5), the particle engine loads on demand. Budgets keep ~20% headroom over the
  * measured value recorded below.
  */
 /*

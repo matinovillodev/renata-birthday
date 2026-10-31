@@ -1,0 +1,174 @@
+---
+/**
+ * "Cómo llegar" map facade. The page shows a hand-drawn preview in the
+ * palette (soft streets, two parks, a dotted trail to a pin with the venue
+ * name); it is an illustration, not a map tile, and requests nothing from
+ * Google. Two actions sit above it:
+ * - "Abrir en Google Maps": the venue share link, in a new tab (no script needed);
+ * - "Ver el mapa interactivo": loads the Google Maps iframe in the preview's
+ *   place (src/scripts/map-facade.ts). It is rendered `hidden` and only shown
+ *   once that script runs.
+ */
+import { copy, event } from '../data/event';
+---
+
+<div class="map" data-map data-map-src={event.venue.mapEmbedUrl} data-map-title={copy.map.iframeTitle}>
+  <div class="map__actions">
+    <a class="btn btn--accent map__action" href={event.venue.mapsShareUrl} target="_blank" rel="noopener">
+      {copy.map.openInMaps}
+    </a>
+    <button type="button" class="btn map__action map__load" data-map-load hidden>{copy.map.loadMap}</button>
+  </div>
+
+  <div class="map__canvas" data-map-canvas>
+    <svg class="map__art" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+      <rect width="800" height="400" class="map__ground"></rect>
+      <g class="map__parks">
+        <path d="M570 240C610 210 690 220 710 270C730 320 660 360 610 340C560 325 540 270 570 240Z"></path>
+        <path d="M110 150C140 120 200 130 210 170C220 210 170 230 130 215C100 200 90 170 110 150Z"></path>
+      </g>
+      <g class="map__trees">
+        <circle cx="600" cy="268" r="9"></circle>
+        <circle cx="640" cy="300" r="11"></circle>
+        <circle cx="676" cy="276" r="8"></circle>
+        <circle cx="150" cy="168" r="9"></circle>
+        <circle cx="178" cy="190" r="7"></circle>
+      </g>
+      <g class="map__streets map__streets--minor">
+        <path d="M-20 90C120 110 200 60 330 80"></path>
+        <path d="M560 -20C540 60 600 130 700 160S760 260 820 290"></path>
+        <path d="M60 420C110 360 170 330 220 300"></path>
+      </g>
+      <g class="map__streets">
+        <path d="M-20 260C150 220 260 280 400 200S650 70 820 110"></path>
+        <path d="M250 -20C300 60 340 140 400 200S470 330 520 420"></path>
+      </g>
+      <path class="map__trail" d="M110 420C170 340 290 300 392 212"></path>
+    </svg>
+
+    <!-- Pin and name sit on the drawing's center, where its streets meet, at any crop. -->
+    <div class="map__pin" aria-hidden="true">
+      <svg viewBox="0 0 40 52" width="40" height="52" focusable="false">
+        <path d="M20 51C20 51 3 32 3 19A17 17 0 0 1 37 19C37 32 20 51 20 51Z" class="map__pin-body"></path>
+        <circle cx="20" cy="19" r="7" class="map__pin-dot"></circle>
+      </svg>
+    </div>
+    <p class="display map__label" aria-hidden="true">{event.venue.name}</p>
+  </div>
+</div>
+
+<style>
+  .map__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin: 24px auto 28px;
+  }
+
+  .map__action {
+    padding: 0 24px;
+    font-size: 17px;
+  }
+
+  /* Second action, quieter: an outlined pill in the accent (4.8:1 on peach). */
+  .map__load {
+    border: 2px solid var(--color-accent);
+    background: transparent;
+    color: var(--color-accent);
+  }
+
+  .map__load:hover {
+    background: rgb(var(--tint-accent) / 0.08);
+  }
+
+  /* Full-bleed: cancel the sheet's side gutter. The loaded iframe keeps this box. */
+  .map__canvas {
+    position: relative;
+    height: clamp(280px, 60vw, 420px);
+    margin: 0 calc(-1 * var(--gutter));
+    overflow: hidden;
+    background: var(--color-map-placeholder);
+  }
+
+  .map__art {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+  }
+
+  .map__ground {
+    fill: var(--color-map-placeholder);
+  }
+
+  .map__parks path {
+    fill: rgb(var(--tint-moss) / 0.2);
+  }
+
+  .map__trees circle {
+    fill: rgb(var(--tint-moss) / 0.3);
+  }
+
+  .map__streets path {
+    fill: none;
+    stroke: var(--color-cream);
+    stroke-linecap: round;
+    stroke-width: 24;
+  }
+
+  .map__streets--minor path {
+    stroke-width: 11;
+    opacity: 0.8;
+  }
+
+  .map__trail {
+    fill: none;
+    stroke: var(--color-gold);
+    stroke-dasharray: 0 13;
+    stroke-linecap: round;
+    stroke-width: 5;
+  }
+
+  /* The pin's tip is the center of the canvas. */
+  .map__pin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    filter: drop-shadow(0 4px 6px rgb(var(--tint-dark) / 0.25));
+  }
+
+  .map__pin-body {
+    fill: var(--color-accent);
+  }
+
+  .map__pin-dot {
+    fill: var(--color-cream);
+  }
+
+  .map__label {
+    position: absolute;
+    top: calc(50% + 10px);
+    left: 50%;
+    width: max-content;
+    max-width: calc(100% - 2 * var(--gutter));
+    transform: translateX(-50%);
+    font-size: 20px;
+    font-style: italic;
+    line-height: 1.25;
+    text-wrap: balance;
+    color: var(--color-cocoa);
+    text-shadow:
+      0 0 6px var(--color-map-placeholder),
+      0 0 12px var(--color-map-placeholder);
+  }
+
+  .map__canvas :global(.map__frame) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+</style>

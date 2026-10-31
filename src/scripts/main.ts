@@ -8,6 +8,7 @@
 import { initMotion } from './animations';
 import { initFairyDust } from './fairy-dust';
 import { initIntro } from './intro';
+import { initMapFacade } from './map-facade';
 import { createMotionGate, REDUCED_MOTION_QUERY } from './motion-gate';
 import { initScrollSpy } from './scroll-spy';
 import { initSmoothScroll } from './smooth-scroll';
@@ -26,6 +27,13 @@ function start(): void {
 
   // From now on the intro button belongs to this script (see bootstrap.ts).
   root.dataset.motion = 'ready';
+}
+
+// Independent of the motion layer: a motion failure must not hide the map button.
+try {
+  initMapFacade();
+} catch (error) {
+  console.error('Map preview failed; the Google Maps link still works.', error);
 }
 
 try {

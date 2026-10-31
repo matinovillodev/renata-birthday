@@ -56,11 +56,32 @@ test('the WhatsApp link opens the pre-filled message in a new tab', async ({ pag
   await expect(link).toHaveAttribute('rel', /\bnoopener\b/);
 });
 
-test('the map iframe uses the data embed URL, a Spanish title and lazy loading', async ({ page }) => {
+test('the map requests nothing from Google until the guest asks for it', async ({ page }) => {
+  const mapRequests: string[] = [];
+  page.on('request', (request) => {
+    if (/google\./.test(new URL(request.url()).hostname)) mapRequests.push(request.url());
+  });
+
+  await page.locator('#como-llegar').scrollIntoViewIfNeeded();
+  await page.waitForLoadState('networkidle');
+  await expect(page.locator('#el-gran-dia iframe')).toHaveCount(0);
+  expect(mapRequests, 'requests to Google before asking').toEqual([]);
+
+  await page.getByRole('button', { name: copy.map.loadMap }).click();
+
   const map = page.locator('#el-gran-dia iframe');
   await expect(map).toHaveAttribute('src', event.venue.mapEmbedUrl);
   await expect(map).toHaveAttribute('title', 'Mapa de ubicación del Centro de Jubilados 12 de Mayo');
-  await expect(map).toHaveAttribute('loading', 'lazy');
+  await expect(map).toBeFocused();
+  await expect(page.getByRole('button', { name: copy.map.loadMap })).toHaveCount(0);
+  await expect.poll(() => mapRequests.some((url) => url.startsWith(event.venue.mapEmbedUrl))).toBe(true);
+});
+
+test('"Abrir en Google Maps" opens the venue share link in a new tab', async ({ page }) => {
+  const link = page.getByRole('link', { name: copy.map.openInMaps });
+  await expect(link).toHaveAttribute('href', event.venue.mapsShareUrl);
+  await expect(link).toHaveAttribute('target', '_blank');
+  await expect(link).toHaveAttribute('rel', /\bnoopener\b/);
 });
 
 test('after opening WhatsApp, no visible text claims the RSVP was confirmed or sent', async ({ page }) => {

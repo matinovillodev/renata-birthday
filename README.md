@@ -1,8 +1,8 @@
 # Renata's first birthday invitation
 
 A single-page, mobile-first digital invitation (fairy theme) built with Astro.
-Guests open it from a link, see the date, time and place, find the venue on an
-embedded map, and confirm attendance through a pre-filled WhatsApp message.
+Guests open it from a link, see the date, time and place, find the venue on a
+map, and confirm attendance through a pre-filled WhatsApp message.
 
 ## Quick path
 
@@ -22,7 +22,8 @@ Everything a host would change lives in **one file**: `src/data/event.ts`.
 | `startsAt` | Date and time as ISO 8601 **with offset**, e.g. `2026-11-28T13:30:00-03:00`. The page writes it into sentences: "el sábado 28 de noviembre, a las 13:30" under the name, and "El sábado 28 de noviembre, a las 13:30, en el Centro de Jubilados 12 de Mayo." in the details (no year). |
 | `timeZone` | IANA zone used to display `startsAt`, e.g. `America/Argentina/Cordoba`. |
 | `venue.name` | Venue in the details sentence, the map and the link preview. The sentence says "en el …", so write a name that takes "el". |
-| `venue.mapEmbedUrl` | `src` of the embedded Google Map (see below). |
+| `venue.mapEmbedUrl` | `src` of the Google Map loaded on request (see below). |
+| `venue.mapsShareUrl` | Short Google Maps link behind "Abrir en Google Maps". |
 | `whatsapp.digits` | Number for the RSVP link: country code + area code + number, digits only (`5493517622809`). |
 | `rsvp.message` | Text pre-filled in WhatsApp. Keep the blanks for name and number of people. |
 | `copy` | Every visible Spanish text, in page order. Texts with the name, date or venue are built from the fields above. Written like a printed card: sentence case, no all-caps labels, facts in sentences; each date phrase stays on one line. |
@@ -32,7 +33,6 @@ Reference fields (not shown on the page):
 | Field | Note |
 | --- | --- |
 | `theme` | Documents the party theme. |
-| `venue.mapsShareUrl` | The short Google Maps link, handy to double-check the place. |
 | `venue.coordinates` | A unit test checks that `mapEmbedUrl` points at these coordinates. |
 | `whatsapp.display` | Human-readable number; a unit test checks it matches `digits`. |
 | `rsvp.deadline` | Keep `null`. The page has no deadline UI yet. |
@@ -40,6 +40,12 @@ Reference fields (not shown on the page):
 Unknown facts go in as `[PLACEHOLDER: …]`, never invented values.
 
 ### Map
+
+"Cómo llegar" shows a hand-drawn preview of the venue
+(`src/components/VenueMap.astro`) and loads nothing from Google until a guest
+asks: **Abrir en Google Maps** opens `venue.mapsShareUrl`, and **Ver el mapa
+interactivo** loads the `mapEmbedUrl` iframe in the preview's place
+(`src/scripts/map-facade.ts`; without JavaScript only the link shows).
 
 The default `mapEmbedUrl` uses the venue coordinates and needs no API key. To
 use Google's official embed instead:
