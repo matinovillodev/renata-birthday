@@ -127,7 +127,7 @@ With reduced motion nothing moves and everything is visible at once.
 | `npm test` | Unit tests (Vitest): data consistency, date labels, WhatsApp link, motion helpers. |
 | `npm run check` | Astro and TypeScript type checks. |
 | `npm run build` | Production build into `dist/`. |
-| `npm run test:e2e` | Playwright on phone, tablet and desktop, with and without reduced motion: intro, links, map, RSVP honesty, accessibility (axe), page weight, hero face clearance and image width. |
+| `npm run test:e2e` | Playwright on phone, tablet and desktop, with and without reduced motion: intro, links (every "Confirmar" jump lands with the WhatsApp button in view), map loaded only on request, RSVP honesty and compact panel (button label on one line at 360 px), copy written once and without all-caps labels, each photo shown once, accessibility (axe), page weight, hero face clearance and image width. |
 
 `npm run test:e2e` builds and serves the site itself and uses the installed
 Google Chrome. Without it: `npx playwright install chromium`, then run with

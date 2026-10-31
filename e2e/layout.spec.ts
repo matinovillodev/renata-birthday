@@ -1,6 +1,6 @@
 import { copy, event } from '../src/data/event';
 import { formatEventDate } from '../src/lib/event-date';
-import { expect, openInvitation, test, topOf } from './fixtures';
+import { expect, openInvitation, reachedSection, test } from './fixtures';
 
 /** Projects whose screenshots the parent reviews for face clearance (desktop = 1440x900). */
 const SCREENSHOT_PROJECTS = new Set(['small', 'tablet-landscape', 'desktop']);
@@ -60,9 +60,9 @@ test('screenshots for face-clearance review', async ({ page }, testInfo) => {
     await expect
       .poll(async () => {
         await page.evaluate((target) => document.getElementById(target)?.scrollIntoView({ behavior: 'instant' }), id);
-        return topOf(page, id);
+        return reachedSection(page, id);
       })
-      .toBeLessThanOrEqual(2);
+      .toBe(true);
     // Wait for the lazy photos in view to load and the sheet content in view to finish revealing.
     await page.waitForFunction(() => {
       const inView = (el: Element) => {

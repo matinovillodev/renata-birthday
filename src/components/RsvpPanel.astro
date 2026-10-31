@@ -4,9 +4,12 @@
  * never says the RSVP was sent. The default slot renders after the button
  * (the closing footer).
  *
- * It is the `#confirmar` anchor target (hero CTA, side nav, shared links), so
- * it is at least one screen tall: every anchor jump can bring it to the top,
- * with the WhatsApp button in view.
+ * It is the `#confirmar` anchor target (hero CTA, side nav, shared links) and
+ * the last section, sized to its content (no forced screen height): a jump to
+ * it scrolls to the end of the page, where the whole panel, WhatsApp button
+ * included, sits in view under the top of the chapter photo. Taller than the
+ * screen (a rotated phone), its top reaches the top of the viewport and the
+ * button is still in view.
  */
 import { copy } from '../data/event';
 import StarIcon from './StarIcon.astro';
@@ -47,22 +50,10 @@ const { whatsappUrl } = Astro.props;
 </section>
 
 <style>
-  /*
-   * At least one screen tall (see above). When the content is shorter than
-   * the screen, the call to action sits centered in the space above the
-   * closing footer, which stays at the bottom.
-   */
-  .rsvp {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-
   .rsvp__cta {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-block: auto;
   }
 
   .rsvp__stars {
@@ -76,12 +67,22 @@ const { whatsappUrl } = Astro.props;
     margin-top: 16px;
   }
 
+  /*
+   * One line down to 360 px phones (272 px between the gutters): a slightly
+   * smaller label, tighter padding, and an icon that never shrinks.
+   */
   .rsvp__whatsapp {
     margin-top: 32px;
-    padding: 0 30px;
+    padding: 0 24px;
+    font-size: 17px;
+    white-space: nowrap;
     background: var(--color-moss);
     color: var(--color-white);
     box-shadow: 0 10px 24px rgb(var(--tint-moss) / 0.28);
+  }
+
+  .rsvp__whatsapp svg {
+    flex: none;
   }
 
   .rsvp__whatsapp:hover {

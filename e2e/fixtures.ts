@@ -74,6 +74,21 @@ export function topOf(page: Page, id: string): Promise<number> {
   }, id);
 }
 
+/**
+ * True when an anchor jump reached the section: its top sits at the top of the
+ * viewport, or, for a last section shorter than the screen (the compact RSVP
+ * panel), the page is scrolled to its end with the section's top in view.
+ */
+export function reachedSection(page: Page, id: string): Promise<boolean> {
+  return page.evaluate((elementId) => {
+    const element = document.getElementById(elementId);
+    if (!element) return false;
+    const top = Math.round(element.getBoundingClientRect().top);
+    const atEnd = innerHeight + scrollY >= document.documentElement.scrollHeight - 2;
+    return Math.abs(top) <= 2 || (atEnd && top >= 0 && top < innerHeight);
+  }, id);
+}
+
 /** Taps (touch projects) or clicks (mouse projects) at viewport coordinates. */
 export async function tapAt(page: Page, testInfo: TestInfo, x: number, y: number): Promise<void> {
   if (testInfo.project.use.hasTouch) await page.touchscreen.tap(x, y);

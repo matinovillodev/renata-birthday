@@ -1,4 +1,4 @@
-import { expect, test, topOf, waitForScript } from './fixtures';
+import { expect, reachedSection, test, waitForScript } from './fixtures';
 
 test.describe('intro gate', () => {
   test('starts with focus on "Abrir invitación" and the content behind it inert', async ({ page }) => {
@@ -42,7 +42,7 @@ test('a deep link to #confirmar skips the intro and shows the RSVP section', asy
   await expect(page.locator('html')).not.toHaveClass(/\bintro\b/);
   await expect(page.locator('[data-intro]')).toBeHidden();
   await expect(page.locator('[inert]')).toHaveCount(0);
-  await expect.poll(() => topOf(page, 'confirmar')).toBeLessThanOrEqual(2);
+  await expect.poll(() => reachedSection(page, 'confirmar')).toBe(true);
   await expect(page.getByRole('heading', { name: 'Confirmá tu asistencia' })).toBeAttached();
   await expect(page.locator('[data-nav-link="confirmar"]')).toHaveAttribute('aria-current', 'true');
 });
